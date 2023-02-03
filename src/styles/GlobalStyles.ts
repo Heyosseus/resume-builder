@@ -4,7 +4,7 @@ export const GlobalStyles = createGlobalStyle`
 
     @font-face {
         font-family: 'Helvetica Neue';
-        src: url('../assets/fonts/Helvetica.ttf') format('truetype');
+        src: url('src/font/HelveticaNeue-01.ttf') format('truetype');
     }
     *{
         margin: 0;
