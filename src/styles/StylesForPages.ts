@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  padding: 45px 48px 0 48px;
+  padding: 45px 164px 0 48px;
+  min-height: 100vh;
   background: #f1efef;
-  height: 100vh;
-`;
+  `;
 
 export const Content = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ export const Input = styled.input`
   }
 `;
 
-export const Warning = styled.span`
+export const WarningMessage = styled.span`
   font-weight: 300;
   line-height: 21px;
   font-size: 14px;
