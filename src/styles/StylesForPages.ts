@@ -5,7 +5,12 @@ export const Container = styled.div`
   padding: 45px 164px 0 48px;
   min-height: 100vh;
   background: #f1efef;
+<<<<<<< HEAD
   `;
+=======
+  min-height: 100vh;
+`;
+>>>>>>> 7a77b9a165ae5a8d76ce303551f7a7d64ceadbca
 
 export const Content = styled.div`
   display: flex;
