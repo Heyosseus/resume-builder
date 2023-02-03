@@ -14,7 +14,7 @@ import {
   Label,
   Line,
   TextArea,
-  Warning,
+  WarningMessage,
   Toggle,
 } from '../styles/StylesForPages';
 function Education() {
@@ -38,7 +38,7 @@ function Education() {
                 placeholder="სასწავლებელი"
                 style={{ width: '100%' }}
               ></Input>
-              <Warning>მინიმუმ 2 სიმბოლო</Warning>
+              <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
             </FormContainer>
           </ContainerForInputs>
           <ForDates>

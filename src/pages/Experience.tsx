@@ -14,7 +14,7 @@ import {
   Label,
   Line,
   TextArea,
-  Warning,
+  WarningMessage,
   Toggle,
 } from '../styles/StylesForPages';
 function Experience() {
@@ -38,7 +38,7 @@ function Experience() {
                 placeholder="დეველოპერი, დიზაინერი, ა.შ"
                 style={{ width: '100%' }}
               ></Input>
-              <Warning>მინიმუმ 2 სიმბოლო</Warning>
+              <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
             </FormContainer>
             <FormContainer>
               <Label>დამსაქმებელი</Label>
@@ -47,7 +47,7 @@ function Experience() {
                 placeholder="დამსაქმებელი"
                 style={{ width: '100%' }}
               ></Input>
-              <Warning>მინიმუმ 2 ასო სიმბოლო</Warning>
+              <WarningMessage>მინიმუმ 2 ასო სიმბოლო</WarningMessage>
             </FormContainer>
           </ContainerForInputs>
           <ForDates>
