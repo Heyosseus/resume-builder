@@ -17,6 +17,7 @@ import {
   WarningMessage,
   Toggle,
 } from '../styles/StylesForPages';
+import ResumeContent from '../components/ResumeContent';
 function Education() {
   return (
     <div>
@@ -44,7 +45,7 @@ function Education() {
           <ForDates>
             <AnotherWrapper>
               <Label>ხარისხი</Label>
-              <Input type="" placeholder='აირჩიეთ ხარისხი'></Input>
+              <Input type="" placeholder="აირჩიეთ ხარისხი"></Input>
             </AnotherWrapper>
             <AnotherWrapper>
               <Label>დამთავრების რიცხვი</Label>
@@ -53,12 +54,15 @@ function Education() {
           </ForDates>
           <AnotherWrapper>
             <Label>აღწერა</Label>
-            <TextArea placeholder="განათლების აღწერა" style={{height: '179px'}}></TextArea>
+            <TextArea
+              placeholder="განათლების აღწერა"
+              style={{ height: '179px' }}
+            ></TextArea>
           </AnotherWrapper>
           <AnotherWrapper>
             <Line style={{ background: '#C1C1C1' }}></Line>
           </AnotherWrapper>
-            <Button>მეტი გამოცდილების დამატება</Button>
+          <Button>მეტი გამოცდილების დამატება</Button>
           <ButtonContainer>
             <Link to="/experience">
               <Toggle>უკან</Toggle>
@@ -69,6 +73,13 @@ function Education() {
           </ButtonContainer>
         </Content>
       </Container>
+      <ResumeContent
+        name={''}
+        surname={''}
+        email={''}
+        phone={''}
+        info={''}
+      />
     </div>
   );
 }
