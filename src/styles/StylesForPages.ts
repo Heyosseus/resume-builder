@@ -57,7 +57,8 @@ export const Input = styled.input`
   height: 48px;
   border-radius: 4px;
   outline: none; 
-  border: 1px solid #bcbcbc;
+  /* border: 1px solid #bcbcbc; */
+  border: none;
   background: white;
   padding: 13px 15px;
   font-size: 16px;
@@ -105,6 +106,7 @@ export const TextArea = styled.textarea`
   resize: none;
   padding: 16px;
   font-size: 16px;
+  color: black;
   ::placeholder {
     font-weight: 400;
     color: black;
