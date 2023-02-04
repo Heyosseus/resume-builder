@@ -1,34 +1,51 @@
-import React from "react";
-import styled from "styled-components";
-import { At, Phone } from "phosphor-react";
+import React from 'react';
+import styled from 'styled-components';
+import { At, Phone } from 'phosphor-react';
 type Props = {
   name: string;
   surname: string;
   email: string;
   phone: string;
+  info: string;
   setName?: React.Dispatch<React.SetStateAction<string>>;
 };
-const ResumeContent: React.FC<Props> = ({ name, surname, email, phone }) => {
+const ResumeContent: React.FC<Props> = ({
+  name,
+  surname,
+  email,
+  phone,
+  info,
+}) => {
   return (
     <div>
       <Container>
         <Header>
           {name} {surname}
         </Header>
-        <Email>
-          {email ? (
-            <div>
-              <At size={16} /> {email}
-            </div>
-          ) : (
-            ""
-          )}
-        </Email>
+        <>
+          <Email>
+            {email && (
+              <div>
+                <At size={20} /> {email}
+              </div>
+            )}
+          </Email>
+        </>
         <ForPhone>
-          {phone ? (<div>
-              <Phone size={16} /> {phone}
-            </div>) : ""}
+          {phone && (
+            <div>
+              <Phone size={20} /> {phone}
+            </div>
+          )}
         </ForPhone>
+        <Content>
+          {info && (
+            <>
+              <About>ჩემ შესახებ</About>
+              <Bio>{info}</Bio>
+            </>
+          )}
+        </Content>
       </Container>
     </div>
   );
@@ -55,13 +72,34 @@ const Email = styled.div`
   display: flex;
   font-weight: 400;
   line-height: 21px;
-  font-size: 18px;
+  font-size: 22px;
   align-items: center;
   justify-content: center;
   gap: 4px;
   color: #1a1a1a;
+  margin-right: auto;
+  margin-top: 16px;
 `;
 
 const ForPhone = styled(Email)`
+  margin-right: auto;
+`;
 
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+  margin-top: 32px;
+  font-size: 16px;
+`;
+
+const About = styled(Header)`
+ font-size: 22px;
 `
+const Bio = styled.p`
+  font-weight: 400;
+  line-height: 22px;
+  font-size: 16px;
+  color: black;
+  margin-top: 16px;
+`;
