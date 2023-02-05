@@ -26,6 +26,8 @@ const Container = styled.div`
   background-image: url(${background});
   background-size: cover;
   height: 100vh;
+  width: 100vw;
+  
 `;
 
 const Logo = styled.img``;
