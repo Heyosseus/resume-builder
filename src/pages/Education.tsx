@@ -73,13 +73,6 @@ function Education() {
           </ButtonContainer>
         </Content>
       </Container>
-      <ResumeContent
-        name={''}
-        surname={''}
-        email={''}
-        phone={''}
-        info={''}
-      />
     </div>
   );
 }
