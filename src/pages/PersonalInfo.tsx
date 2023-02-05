@@ -1,12 +1,16 @@
-import styled from 'styled-components';
-import {
-  CaretCircleLeft,
-  Warning,
-  CheckCircle,
-} from 'phosphor-react';
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useContext, useRef } from "react";
+import styled from "styled-components";
+import { InputContext } from "../contexts/InputContext";
 
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { CaretCircleLeft, Warning, CheckCircle } from "phosphor-react";
+
+import {
+  validateEmail,
+  validateGeorgian,
+  validateGeorgianPhone,
+} from "../utils/Validation";
 import {
   Container,
   Content,
@@ -24,10 +28,9 @@ import {
   UploadPhoto,
   WarningMessage,
   WrapperForPhoto,
-} from '../styles/StylesForPages';
-import ResumeContent from '../components/ResumeContent';
-import { useEffect, useRef } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
+} from "../styles/StylesForPages";
+
+
 
 type Inputs = {
   firstname: string;
@@ -36,6 +39,7 @@ type Inputs = {
   phone: string;
   info: string;
 };
+
 
 function PersonalInfo(props: any) {
   const {
@@ -49,8 +53,11 @@ function PersonalInfo(props: any) {
     setPhone,
     info,
     setInfo,
+    setImage,
+    setShowImage,
   } = props;
 
+  //for react-hook-form
   const {
     register,
     handleSubmit,
@@ -58,81 +65,65 @@ function PersonalInfo(props: any) {
   } = useForm<Inputs>();
 
   const onSubmit = () => {
-    navigate('/experience');
+    navigate("/experience");
   };
 
+  //For image upload
+  const hiddenFileInput = useRef<HTMLInputElement>(null as any);
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImage(event.target.files![0]);
+  };
+
+  const handleButtonClick = () => {
+    setShowImage(true);
+    hiddenFileInput.current.click();
+  };
+
+  // when user navigates to the home page, local storage would be cleared
+  const navigate = useNavigate();
+
+  const clearStorage = () => {
+    setName("");
+    setSurname("");
+    setEmail("");
+    setInfo("");
+    setPhone("");
+    setImage("");
+    navigate("/");
+  };
+
+  // for input fields
   const handleChange = (event: any, inputName: string) => {
     switch (inputName) {
-      case 'firstname':
+      case "firstname":
         setName(event.target.value);
         break;
-      case 'surname':
+      case "surname":
         setSurname(event.target.value);
         break;
-      case 'info':
+      case "info":
         setInfo(event.target.value);
         break;
-      case 'email':
+      case "image":
+        setImage(event.target.value);
+        break;
+      case "email":
         setEmail(event.target.value);
         break;
-      case 'phone':
+      case "phone":
         setPhone(event.target.value);
         break;
       default:
         break;
     }
   };
-  const validateGeorgian = (value: string): boolean | string => {
-    const pattern = /^[\u10A0-\u10FF]+$/;
-    return pattern.test(value) || '';
-  };
-  const validateGeorgianPhone = (value: any) => {
-    // const phoneRegex = /^(\+995|00995|995)?(5[0-9]{8})$/;
-    const phoneRegex =
-      /^(\+995\s)?(5[0-9]{2}\s[0-9]{2}\s[0-9]{2}\s[0-9]{2})$/;
-    if (!phoneRegex.test(value)) return false;
-    return true;
-  };
-  const validateEmail = (value: string) => {
-    const emailRegex = /^\w+([.-]?\w+)*@redberry.ge$/;
-    if (!emailRegex.test(value)) return false;
-    return true;
-  };
-
-  const hiddenFileInput = useRef<HTMLInputElement>(null as any);
-
-  const handleClick = () => {
-    hiddenFileInput.current.click();
-  };
-  const handleChangeInput = (event: any) => {
-    const fileUploaded = event.target.files[0];
-    props.handleFile(fileUploaded);
-  };
-
-  const navigate = useNavigate();
-
-
-  useEffect(() => {
-    return () => {
-      window.localStorage.clear();
-    };
-  }, [navigate]);
-
-  const clearStorage = () => {
-    setName('');
-    setSurname('');
-    setEmail('');
-    setInfo('');
-    setPhone('');
-    navigate('/');
-  };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <Container>
         <CaretCircleLeft
           size={38}
-          style={{ color: 'black' }}
+          style={{ color: "black" }}
           onClick={clearStorage}
         />
 
@@ -152,26 +143,26 @@ function PersonalInfo(props: any) {
                   maxLength={14}
                   value={name}
                   style={{
-                    border: errors.firstname ? '1px solid red' : '',
+                    border: errors.firstname
+                      ? "1px solid red"
+                      : !errors.firstname
+                      ? "1px solid gray"
+                      : "1px solid green",
                   }}
-                  {...register('firstname', {
+                  {...register("firstname", {
                     required: true,
                     minLength: 2,
                     validate: validateGeorgian,
                   })}
-                  onChange={(event) =>
-                    handleChange(event, 'firstname')
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                    handleChange(event, "firstname")
                   }
                 ></Input>
                 <Error>
-                  {errors.firstname && (
-                    <Warning size={16} color="red" />
-                  )}
+                  {errors.firstname && <Warning size={16} color="red" />}
                 </Error>
               </FormInput>
-              <WarningMessage>
-                მინიმუმ 2 ასო, ქართული ასოები
-              </WarningMessage>
+              <WarningMessage>მინიმუმ 2 ასო, ქართული ასოები</WarningMessage>
             </FormContainer>
             <FormContainer>
               <Label>გვარი</Label>
@@ -182,36 +173,35 @@ function PersonalInfo(props: any) {
                   maxLength={20}
                   value={surname}
                   style={{
-                    border: errors.surname ? '1px solid red' : '',
+                    border: errors.surname ? "1px solid red" : "1px solid gray",
                   }}
-                  {...register('surname', {
+                  {...register("surname", {
                     required: true,
                     minLength: 2,
                     validate: validateGeorgian,
                   })}
-                  onChange={(event) => handleChange(event, 'surname')}
+                  onChange={(event) => {
+                    handleChange(event, "surname");
+                    if (!errors.surname) {
+                      setSurname(event.target.value);
+                    }
+                  }}
                 ></Input>
                 <Error>
-                  {errors.firstname && (
-                    <Warning size={16} color="red" />
-                  )}
+                  {errors.surname && <Warning size={16} color="red" />}
                 </Error>
               </FormInput>
-              <WarningMessage>
-                მინიმუმ 2 ასო, ქართული ასოები
-              </WarningMessage>
+              <WarningMessage>მინიმუმ 2 ასო, ქართული ასოები</WarningMessage>
             </FormContainer>
           </ForInputs>
           <WrapperForPhoto>
-            <Label style={{ fontSize: '18px' }}>
-              პირადი ფოტოს ატვირთვა
-            </Label>
-            <UploadPhoto onClick={handleClick}>ატვირთვა</UploadPhoto>
+            <Label style={{ fontSize: "18px" }}>პირადი ფოტოს ატვირთვა</Label>
+            <UploadPhoto onClick={handleButtonClick}>ატვირთვა</UploadPhoto>
             <InputForPhotoUpload
               type="file"
               ref={hiddenFileInput}
-              onChange={handleChangeInput}
-              style={{ display: 'none' }}
+              onChange={handleImageUpload}
+              style={{ display: "none" }}
             />
           </WrapperForPhoto>
           <AnotherWrapper>
@@ -220,7 +210,7 @@ function PersonalInfo(props: any) {
               placeholder="ზოგადი ინფო შენ შესახებ"
               name="info"
               value={info}
-              onChange={(event) => handleChange(event, 'info')}
+              onChange={(event) => handleChange(event, "info")}
             ></TextArea>
           </AnotherWrapper>
           <AnotherWrapper>
@@ -231,23 +221,26 @@ function PersonalInfo(props: any) {
                 placeholder="anzor666@redberry.ge"
                 value={email}
                 style={{
-                  width: '100%',
-                  border: errors.email ? '1px solid red' : '',
+                  width: "100%",
+                  border: errors.email
+                    ? "1px solid red"
+                    : !errors.firstname
+                    ? "1px solid green"
+                    : "",
                 }}
-                {...register('email', {
+                {...register("email", {
                   required: true,
                   minLength: 2,
                   validate: validateEmail,
                 })}
-                onChange={(event) => handleChange(event, 'email')}
+                onChange={(event) => handleChange(event, "email")}
               ></Input>
               <Error>
                 {errors.email && <Warning size={16} color="red" />}
+                {!errors.email && <CheckCircle size={22} color="green" />}
               </Error>
             </FormInput>
-            <WarningMessage>
-              უნდა მთავრდებოდეს @redberry.ge-ით
-            </WarningMessage>
+            <WarningMessage>უნდა მთავრდებოდეს @redberry.ge-ით</WarningMessage>
           </AnotherWrapper>
           <AnotherWrapper>
             <Label>მობილურის ნომერი</Label>
@@ -257,18 +250,23 @@ function PersonalInfo(props: any) {
                 placeholder="+995 551 12 34 56"
                 value={phone}
                 style={{
-                  width: '100%',
-                  border: errors.phone ? '1px solid red' : '',
+                  width: "100%",
+                  border: errors.phone
+                    ? "1px solid red"
+                    : !errors.firstname
+                    ? "1px solid green"
+                    : "",
                 }}
-                {...register('phone', {
+                {...register("phone", {
                   required: true,
                   minLength: 2,
                   validate: validateGeorgianPhone,
                 })}
-                onChange={(event) => handleChange(event, 'phone')}
+                onChange={(event) => handleChange(event, "phone")}
               ></Input>
               <Error>
                 {errors.phone && <Warning size={16} color="red" />}
+                {/* {!errors.phone && <CheckCircle size={22} color="green" />} */}
               </Error>
             </FormInput>
             <WarningMessage>
@@ -280,13 +278,6 @@ function PersonalInfo(props: any) {
           </WrapperForButton>
         </Content>
       </Container>
-      <ResumeContent
-        name={name}
-        surname={surname}
-        email={email}
-        phone={phone}
-        info={info}
-      />
     </div>
   );
 }
@@ -315,3 +306,4 @@ const Error = styled.div`
 `;
 
 const InputForPhotoUpload = styled.input``;
+
