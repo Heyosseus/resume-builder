@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import { CaretCircleLeft } from 'phosphor-react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import { CaretCircleLeft } from "phosphor-react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
   Content,
@@ -16,13 +16,59 @@ import {
   TextArea,
   WarningMessage,
   Toggle,
-} from '../styles/StylesForPages';
-function Experience() {
+} from "../styles/StylesForPages";
+import ResumeContent from "../components/ResumeContent";
+import { validateGeorgian } from "../utils/Validation";
+import { useForm } from "react-hook-form";
+function Experience(props: any) {
+  const {
+    position,
+    setPosition,
+    employer,
+    setEmployer,
+  } = props;
+
+  // when user navigates to the home page, local storage would be cleared
+  const navigate = useNavigate();
+
+  // const clearStorage = () => {
+  //   setName("");
+  //   setSurname("");
+  //   setEmail("");
+  //   setInfo("");
+  //   setPhone("");
+  //   setImage("");
+  //   navigate("/");
+  // };
+
+  // for input fields
+  const handleChange = (event: any, inputName: string) => {
+    switch (inputName) {
+      case "position":
+        setPosition(event.target.value);
+        break;
+      case "employer":
+        setEmployer(event.target.value);
+        break;    
+      default:
+        break;
+    }
+  };
+
+   const {
+     register,
+     handleSubmit,
+     formState: { errors },
+   } = useForm();
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       <Container>
         <Link to="/">
-          <CaretCircleLeft size={38} style={{ color: 'black' }} />
+          <CaretCircleLeft
+            size={38}
+            style={{ color: "black" }}
+            // onClick={clearStorage}
+          />
         </Link>
         <Content>
           <Wrapper>
@@ -36,7 +82,23 @@ function Experience() {
               <Input
                 type="text"
                 placeholder="დეველოპერი, დიზაინერი, ა.შ"
-                style={{ width: '100%' }}
+                maxLength={14}
+                value={position}
+                style={{
+                  width: "100%",
+                  border: errors.position
+                    ? "1px solid red"
+                    : !errors.position
+                    ? "1px solid gray"
+                    : "1px solid green",
+                }}
+                {...register("firstname", {
+                  required: true,
+                  minLength: 2,
+                })}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(event, "position")
+                }
               ></Input>
               <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
             </FormContainer>
@@ -45,7 +107,22 @@ function Experience() {
               <Input
                 type="text"
                 placeholder="დამსაქმებელი"
-                style={{ width: '100%' }}
+                value={employer}
+                style={{
+                  width: "100%",
+                  border: errors.employer
+                    ? "1px solid red"
+                    : !errors.employer
+                    ? "1px solid gray"
+                    : "1px solid green",
+                }}
+                {...register("employer", {
+                  required: true,
+                  minLength: 2,
+                })}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(event, "employer")
+                }
               ></Input>
               <WarningMessage>მინიმუმ 2 ასო სიმბოლო</WarningMessage>
             </FormContainer>
@@ -65,7 +142,7 @@ function Experience() {
             <TextArea placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"></TextArea>
           </AnotherWrapper>
           <AnotherWrapper>
-            <Line style={{ background: '#C1C1C1' }}></Line>
+            <Line style={{ background: "#C1C1C1" }}></Line>
             <Button>მეტი გამოცდილების დამატება</Button>
           </AnotherWrapper>
           <ButtonContainer>
