@@ -1,12 +1,18 @@
-import React from 'react';
-import styled from 'styled-components';
-import { At, Phone } from 'phosphor-react';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { At, Phone } from "phosphor-react";
+import useLocalStorage from "../hooks/useLocalStorage";
 type Props = {
   name: string;
   surname: string;
   email: string;
   phone: string;
   info: string;
+  image: any;
+  setImage: any;
+  showImage: boolean;
+  position: string;
+  employer: string;
   setName?: React.Dispatch<React.SetStateAction<string>>;
 };
 const ResumeContent: React.FC<Props> = ({
@@ -15,48 +21,83 @@ const ResumeContent: React.FC<Props> = ({
   email,
   phone,
   info,
+  image,
+  setImage,
+  showImage,
+  position,
+  employer,
 }) => {
+  useEffect(() => {
+    if (showImage && image instanceof Blob) {
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+    }
+  }, [showImage, image]);
+
   return (
-    <div>
-      <Container>
-        <Header>
-          {name} {surname}
-        </Header>
-        <>
-          <Email>
-            {email && (
+    <Wrapper>
+      <ContentContainer>
+        <Container>
+          <Header>
+            {name} {surname}
+          </Header>
+          <>
+            <Email>
+              {email && (
+                <div>
+                  <At size={20} /> {email}
+                </div>
+              )}
+            </Email>
+          </>
+          <ForPhone>
+            {phone && (
               <div>
-                <At size={20} /> {email}
+                <Phone size={20} /> {phone}
               </div>
             )}
-          </Email>
-        </>
-        <ForPhone>
-          {phone && (
-            <div>
-              <Phone size={20} /> {phone}
-            </div>
-          )}
-        </ForPhone>
-        <Content>
-          {info && (
-            <>
-              <About>ჩემ შესახებ</About>
-              <Bio>{info}</Bio>
-            </>
-          )}
-        </Content>
-      </Container>
-    </div>
+          </ForPhone>
+          <Content>
+            {info && (
+              <>
+                <About>ჩემ შესახებ</About>
+                <Bio>{info}</Bio>
+              </>
+            )}
+          </Content>
+        </Container>
+        <ForImage>
+          {showImage && image && <ImageContainer src={image} alt="Preview" />}
+        </ForImage>
+      </ContentContainer>
+      {position && (
+        <div>
+          <Line></Line>
+          <HeaderForExperience>გამოცდილება</HeaderForExperience>
+          <Position>
+            {position}, {employer}
+          </Position>
+        </div>
+      )}
+    </Wrapper>
   );
 };
 
 export default ResumeContent;
-
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 68px 0 68px 60px;
+`;
+const ContentContainer = styled.div`
+  display: flex;
+`;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 68px 80px;
 `;
 const Header = styled.h1`
   font-weight: 700;
@@ -91,15 +132,48 @@ const Content = styled.div`
   margin-right: auto;
   margin-top: 32px;
   font-size: 16px;
+  width: 430px;
 `;
 
 const About = styled(Header)`
- font-size: 22px;
-`
+  font-size: 22px;
+`;
 const Bio = styled.p`
   font-weight: 400;
-  line-height: 22px;
+  line-height: 23px;
   font-size: 16px;
   color: black;
   margin-top: 16px;
+  word-wrap: break-word;
+`;
+
+const ImageContainer = styled.img`
+  border-radius: 50%;
+  width: 246px;
+`;
+
+const ForImage = styled.div`
+  position: absolute;
+  right: 0;
+  padding-right: 64px;
+`;
+
+const Line = styled.div`
+  height: 1px;
+  background: #c8c8c8;
+  width: 662px;
+  margin-top: 18px;
+`;
+
+const HeaderForExperience = styled(About)`
+  margin-top: 21px;
+`;
+
+const Position = styled.h2`
+  color: #1a1a1a;
+  font-size: 16px;
+  line-height: 21px;
+  margin-top: 15px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
 `;
