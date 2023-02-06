@@ -67,66 +67,67 @@ const ResumeContent: React.FC<Props> = ({
 
   return (
     <Wrapper>
-      <ContentContainer>
-        <Container>
-          <Header>
-            {name} {surname}
-          </Header>
-          <>
-            <Email>
-              {email && (
+      <div>
+        <ContentContainer>
+          <Container>
+            <Header>
+              {name} {surname}
+            </Header>
+            <>
+              <Email>
+                {email && (
+                  <div>
+                    <At size={20} /> {email}
+                  </div>
+                )}
+              </Email>
+            </>
+            <ForPhone>
+              {phone && (
                 <div>
-                  <At size={20} /> {email}
+                  <Phone size={20} /> {phone}
                 </div>
               )}
-            </Email>
-          </>
-          <ForPhone>
-            {phone && (
-              <div>
-                <Phone size={20} /> {phone}
-              </div>
-            )}
-          </ForPhone>
-          <Content>
-            {info && (
-              <>
-                <About>ჩემ შესახებ</About>
-                <Bio>{info}</Bio>
-              </>
-            )}
-          </Content>
-        </Container>
-        <ForImage>
-          {showImage && image && <ImageContainer src={image} alt="Preview" />}
-        </ForImage>
-      </ContentContainer>
-      {position && (
-        <div>
-          <Line></Line>
-          <HeaderForExperience>გამოცდილება</HeaderForExperience>
-          <Position>
-            {position}, {employer}
-          </Position>
-          <Dates>
-            {[startDate, "-"]} {endDate}
-            {[startDate, "-"]} {endDate}
-          </Dates>
-          <AboutExperience>{experience}</AboutExperience>
-        </div>
-      )}
-      {school && (
-        <div>
-          <Line></Line>
-          <HeaderForExperience>განათლება</HeaderForExperience>
-          <Position>
-            {[school, ","]} {degree}
-          </Position>
-          <Dates>{endOfStudy}</Dates>
-          <AboutExperience>{bio}</AboutExperience>
-          <Logo src={cv}></Logo>
-        </div>
-      )}
+            </ForPhone>
+            <Content>
+              {info && (
+                <>
+                  <About>ჩემ შესახებ</About>
+                  <Bio>{info}</Bio>
+                </>
+              )}
+            </Content>
+          </Container>
+          <ForImage>
+            {showImage && image && <ImageContainer src={image} alt="Preview" />}
+          </ForImage>
+        </ContentContainer>
+        {position && (
+          <div>
+            <Line></Line>
+            <HeaderForExperience>გამოცდილება</HeaderForExperience>
+            <Position>
+              {position}, {employer}
+            </Position>
+            <Dates>
+              {[startDate, "-"]} {endDate}
+            </Dates>
+            <AboutExperience>{experience}</AboutExperience>
+          </div>
+        )}
+        {school && (
+          <div>
+            <Line></Line>
+            <HeaderForExperience>განათლება</HeaderForExperience>
+            <Position>
+              {[school, ","]} {degree}
+            </Position>
+            <Dates>{endOfStudy}</Dates>
+            <AboutExperience>{bio}</AboutExperience>
+          </div>
+        )}
+      </div>
+      <Logo src={cv}></Logo>
     </Wrapper>
   );
 };
@@ -135,6 +136,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 68px 0 68px 60px;
+  justify-content: space-between;
 `;
 const ContentContainer = styled.div`
   display: flex;
@@ -232,15 +234,18 @@ const Dates = styled.div`
   margin-top: 4px;
 `;
 
-const AboutExperience = styled(Bio)``;
+const AboutExperience = styled(Bio)`
+  width: 630px;
+  letter-spacing: 0.6px;
+  word-wrap: break-word;
+`;
 
 
 
 const Logo = styled.img`
   width: 42px;
   height: 42px;
-  position: absolute;
   bottom: 0;
-  margin-bottom: 64px;
+  margin-top: 64px;
 `
 
