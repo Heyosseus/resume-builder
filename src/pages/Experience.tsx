@@ -1,7 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { CaretCircleLeft } from "phosphor-react";
-import { Link, useNavigate } from "react-router-dom";
+import React from 'react';
+import styled from 'styled-components';
+import { CaretCircleLeft } from 'phosphor-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import {
   Container,
   Content,
@@ -16,58 +17,59 @@ import {
   TextArea,
   WarningMessage,
   Toggle,
-} from "../styles/StylesForPages";
-import ResumeContent from "../components/ResumeContent";
-import { validateGeorgian } from "../utils/Validation";
-import { useForm } from "react-hook-form";
+} from '../styles/StylesForPages';
+
 function Experience(props: any) {
   const {
     position,
-    setPosition,
     employer,
+    experience,
+    handleChange,
+    setStartDate,
+    setEndDate,
+    setExperience,
+    handleAddInput,
+    inputs,
+    setName,
+    setSurname,
+    setEmail,
+    setPhone,
+    setInfo,
+    setImage,
+    setPosition,
     setEmployer,
   } = props;
 
   // when user navigates to the home page, local storage would be cleared
   const navigate = useNavigate();
 
-  // const clearStorage = () => {
-  //   setName("");
-  //   setSurname("");
-  //   setEmail("");
-  //   setInfo("");
-  //   setPhone("");
-  //   setImage("");
-  //   navigate("/");
-  // };
-
-  // for input fields
-  const handleChange = (event: any, inputName: string) => {
-    switch (inputName) {
-      case "position":
-        setPosition(event.target.value);
-        break;
-      case "employer":
-        setEmployer(event.target.value);
-        break;    
-      default:
-        break;
-    }
+  const clearStorageForExp = () => {
+    setStartDate('');
+    setEndDate('');
+    setPosition('');
+    setName('');
+    setSurname('');
+    setEmail('');
+    setPhone('');
+    setInfo('');
+    setEmployer('');
+    setExperience('');
+    navigate('/');
   };
 
-   const {
-     register,
-     handleSubmit,
-     formState: { errors },
-   } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: 'flex' }}>
       <Container>
         <Link to="/">
           <CaretCircleLeft
             size={38}
-            style={{ color: "black" }}
-            // onClick={clearStorage}
+            style={{ color: 'black' }}
+            onClick={clearStorageForExp}
           />
         </Link>
         <Content>
@@ -82,23 +84,23 @@ function Experience(props: any) {
               <Input
                 type="text"
                 placeholder="დეველოპერი, დიზაინერი, ა.შ"
-                maxLength={14}
+                maxLength={44}
                 value={position}
                 style={{
-                  width: "100%",
+                  width: '100%',
                   border: errors.position
-                    ? "1px solid red"
+                    ? '1px solid red'
                     : !errors.position
-                    ? "1px solid gray"
-                    : "1px solid green",
+                    ? '1px solid gray'
+                    : '1px solid green',
                 }}
-                {...register("firstname", {
+                {...register('firstname', {
                   required: true,
                   minLength: 2,
                 })}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(event, "position")
-                }
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'position')}
               ></Input>
               <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
             </FormContainer>
@@ -109,20 +111,20 @@ function Experience(props: any) {
                 placeholder="დამსაქმებელი"
                 value={employer}
                 style={{
-                  width: "100%",
+                  width: '100%',
                   border: errors.employer
-                    ? "1px solid red"
+                    ? '1px solid red'
                     : !errors.employer
-                    ? "1px solid gray"
-                    : "1px solid green",
+                    ? '1px solid gray'
+                    : '1px solid green',
                 }}
-                {...register("employer", {
+                {...register('employer', {
                   required: true,
                   minLength: 2,
                 })}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  handleChange(event, "employer")
-                }
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'employer')}
               ></Input>
               <WarningMessage>მინიმუმ 2 ასო სიმბოლო</WarningMessage>
             </FormContainer>
@@ -130,20 +132,36 @@ function Experience(props: any) {
           <ForDates>
             <AnotherWrapper>
               <Label>დაწყების რიცხვი</Label>
-              <Input type="date"></Input>
+              <Input
+                type="date"
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'start')}
+              ></Input>
             </AnotherWrapper>
             <AnotherWrapper>
               <Label>დამთავრების რიცხვი</Label>
-              <Input type="date"></Input>
+              <Input
+                type="date"
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'end')}
+              ></Input>
             </AnotherWrapper>
           </ForDates>
           <AnotherWrapper>
             <Label>აღწერა</Label>
-            <TextArea placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"></TextArea>
+            <TextArea
+              placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
+              value={experience}
+              onChange={(event) => handleChange(event, 'experience')}
+            ></TextArea>
           </AnotherWrapper>
           <AnotherWrapper>
-            <Line style={{ background: "#C1C1C1" }}></Line>
-            <Button>მეტი გამოცდილების დამატება</Button>
+            <Line style={{ background: '#C1C1C1' }}></Line>
+            <Button onClick={handleAddInput}>
+              მეტი გამოცდილების დამატება
+            </Button>         
           </AnotherWrapper>
           <ButtonContainer>
             <Link to="/personal">

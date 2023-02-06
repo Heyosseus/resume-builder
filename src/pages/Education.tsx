@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { CaretCircleLeft } from 'phosphor-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Container,
   Content,
@@ -17,13 +17,65 @@ import {
   WarningMessage,
   Toggle,
 } from '../styles/StylesForPages';
-import ResumeContent from '../components/ResumeContent';
-function Education() {
+
+function Education(props: any) {
+   const {
+    position,
+    employer,
+    handleChange,
+    setStartDate,
+    setEndDate,
+    setExperience,
+    handleAddInput,
+    inputs,
+    setName,
+    setSurname,
+    setEmail,
+    setPhone,
+    setInfo,
+    setImage,
+    setPosition,
+    setEmployer,
+    school,
+    setSchool,
+    degree, 
+    setDegree,
+    endOfStudy,
+    setEndOfStudy,
+    bio,
+    setBio,
+    display,
+    setDisplay,
+  } = props;
+
+  const navigate = useNavigate();
+
+  const clearStorageForEdu = () => {
+    setStartDate('');
+    setEndDate('');
+    setPosition('');
+    setName('');
+    setSurname('');
+    setEmail('');
+    setPhone('');
+    setInfo('');
+    setEmployer('');
+    setExperience('');
+    navigate('/');
+  };
+
+  const handleFinish = () => {
+    setDisplay(!display);
+  }
   return (
     <div>
       <Container>
         <Link to="/">
-          <CaretCircleLeft size={38} style={{ color: 'black' }} />
+          <CaretCircleLeft
+            size={38}
+            style={{ color: 'black' }}
+            onClick={clearStorageForEdu}
+          />
         </Link>
         <Content>
           <Wrapper>
@@ -37,7 +89,11 @@ function Education() {
               <Input
                 type="text"
                 placeholder="სასწავლებელი"
+                value={school}
                 style={{ width: '100%' }}
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'school')}
               ></Input>
               <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
             </FormContainer>
@@ -45,11 +101,23 @@ function Education() {
           <ForDates>
             <AnotherWrapper>
               <Label>ხარისხი</Label>
-              <Input type="" placeholder="აირჩიეთ ხარისხი"></Input>
+              <Input
+                type=""
+                placeholder="აირჩიეთ ხარისხი"
+                value={degree}
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'degree')}
+              ></Input>
             </AnotherWrapper>
             <AnotherWrapper>
               <Label>დამთავრების რიცხვი</Label>
-              <Input type="date"></Input>
+              <Input
+                type="date"
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'endOfStudy')}
+              ></Input>
             </AnotherWrapper>
           </ForDates>
           <AnotherWrapper>
@@ -57,6 +125,10 @@ function Education() {
             <TextArea
               placeholder="განათლების აღწერა"
               style={{ height: '179px' }}
+              value={bio}
+              onChange={(
+                event: React.ChangeEvent<HTMLTextAreaElement>
+              ) => handleChange(event, 'bio')}
             ></TextArea>
           </AnotherWrapper>
           <AnotherWrapper>
@@ -67,8 +139,8 @@ function Education() {
             <Link to="/experience">
               <Toggle>უკან</Toggle>
             </Link>
-            <Link to="/education">
-              <Toggle>შემდეგი</Toggle>
+            <Link to="/finish">
+              <Toggle onClick={handleFinish}>დასრულება</Toggle>
             </Link>
           </ButtonContainer>
         </Content>
