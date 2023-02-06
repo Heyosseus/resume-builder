@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { At, Phone } from 'phosphor-react';
+
 import cv from '../assets/LOGO-cv.png';
+
 
 type Props = {
   name: string;
@@ -108,6 +110,7 @@ const ResumeContent: React.FC<Props> = ({
           </Position>
           <Dates>
             {[startDate, "-"]} {endDate}
+            {[startDate, "-"]} {endDate}
           </Dates>
           <AboutExperience>{experience}</AboutExperience>
         </div>
@@ -121,13 +124,12 @@ const ResumeContent: React.FC<Props> = ({
           </Position>
           <Dates>{endOfStudy}</Dates>
           <AboutExperience>{bio}</AboutExperience>
-          <Logo src={cv} alt="logo" />
+          <Logo src={cv}></Logo>
         </div>
       )}
     </Wrapper>
   );
 };
-
 export default ResumeContent;
 const Wrapper = styled.div`
   display: flex;
@@ -198,7 +200,7 @@ const ImageContainer = styled.img`
 
 const ForImage = styled.div`
   right: 0;
-  padding-right: 64px;
+  padding-right: 58px;
 `;
 
 const Line = styled.div`
@@ -233,6 +235,7 @@ const Dates = styled.div`
 const AboutExperience = styled(Bio)``;
 
 
+
 const Logo = styled.img`
   width: 42px;
   height: 42px;
@@ -240,3 +243,4 @@ const Logo = styled.img`
   bottom: 0;
   margin-bottom: 64px;
 `
+
