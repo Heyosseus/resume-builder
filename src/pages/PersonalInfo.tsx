@@ -53,8 +53,10 @@ function PersonalInfo(props: any) {
     setPhone,
     info,
     setInfo,
+    image,
     setImage,
     setShowImage,
+    handleChange,
   } = props;
 
   //for react-hook-form
@@ -63,6 +65,18 @@ function PersonalInfo(props: any) {
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+
+
+  const navigate = useNavigate();
+  const clearStorage = () => {
+    setName('');
+    setSurname('');
+    setEmail('');
+    setInfo('');
+    setPhone('');
+    setImage('');
+    navigate('/');
+  };
 
   const onSubmit = () => {
     navigate("/experience");
@@ -79,44 +93,7 @@ function PersonalInfo(props: any) {
     hiddenFileInput.current.click();
   };
 
-  // when user navigates to the home page, local storage would be cleared
-  const navigate = useNavigate();
 
-  const clearStorage = () => {
-    setName("");
-    setSurname("");
-    setEmail("");
-    setInfo("");
-    setPhone("");
-    setImage("");
-    navigate("/");
-  };
-
-  // for input fields
-  const handleChange = (event: any, inputName: string) => {
-    switch (inputName) {
-      case "firstname":
-        setName(event.target.value);
-        break;
-      case "surname":
-        setSurname(event.target.value);
-        break;
-      case "info":
-        setInfo(event.target.value);
-        break;
-      case "image":
-        setImage(event.target.value);
-        break;
-      case "email":
-        setEmail(event.target.value);
-        break;
-      case "phone":
-        setPhone(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <div style={{ display: "flex" }}>

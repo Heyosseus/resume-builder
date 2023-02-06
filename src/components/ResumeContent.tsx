@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { At, Phone } from "phosphor-react";
-import useLocalStorage from "../hooks/useLocalStorage";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { At, Phone } from 'phosphor-react';
+import cv from '../assets/LOGO-cv.png';
+
 type Props = {
   name: string;
   surname: string;
@@ -13,8 +14,20 @@ type Props = {
   showImage: boolean;
   position: string;
   employer: string;
+  startDate: string;
+  endDate: string;
+  experience: string;
+  handleAddInput: any;
+  inputs: any;
+  school: string;
+  degree: string;
+  endOfStudy: string;
+  bio: string;
+  display: string;
+  setDisplay: any;
   setName?: React.Dispatch<React.SetStateAction<string>>;
 };
+
 const ResumeContent: React.FC<Props> = ({
   name,
   surname,
@@ -26,6 +39,15 @@ const ResumeContent: React.FC<Props> = ({
   showImage,
   position,
   employer,
+  startDate,
+  experience,
+  endDate,
+  school,
+  degree,
+  endOfStudy,
+  bio,
+  display,
+  setDisplay,
 }) => {
   useEffect(() => {
     if (showImage && image instanceof Blob) {
@@ -33,6 +55,10 @@ const ResumeContent: React.FC<Props> = ({
       reader.readAsDataURL(image);
       reader.onloadend = () => {
         setImage(reader.result as string);
+        window.localStorage.setItem(
+          'image',
+          JSON.stringify(reader.result)
+        );
       };
     }
   }, [showImage, image]);
@@ -80,6 +106,22 @@ const ResumeContent: React.FC<Props> = ({
           <Position>
             {position}, {employer}
           </Position>
+          <Dates>
+            {[startDate, "-"]} {endDate}
+          </Dates>
+          <AboutExperience>{experience}</AboutExperience>
+        </div>
+      )}
+      {school && (
+        <div>
+          <Line></Line>
+          <HeaderForExperience>განათლება</HeaderForExperience>
+          <Position>
+            {[school, ","]} {degree}
+          </Position>
+          <Dates>{endOfStudy}</Dates>
+          <AboutExperience>{bio}</AboutExperience>
+          <Logo src={cv} alt="logo" />
         </div>
       )}
     </Wrapper>
@@ -150,10 +192,11 @@ const Bio = styled.p`
 const ImageContainer = styled.img`
   border-radius: 50%;
   width: 246px;
+  height: 246px;
+  background-size: cover;
 `;
 
 const ForImage = styled.div`
-  position: absolute;
   right: 0;
   padding-right: 64px;
 `;
@@ -177,3 +220,23 @@ const Position = styled.h2`
   font-weight: 700;
   letter-spacing: 0.8px;
 `;
+
+const Dates = styled.div`
+  font-weight: 400;
+  line-height: 21px;
+  font-size: 16px;
+  font-style: italic;
+  color: #909090;
+  margin-top: 4px;
+`;
+
+const AboutExperience = styled(Bio)``;
+
+
+const Logo = styled.img`
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 64px;
+`

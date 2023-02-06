@@ -87,6 +87,7 @@ export const UploadPhoto = styled.button`
   width: 107px;
   height: 27px;
   border-radius: 4px;
+  background-size: cover;
   font-size: 14px;
   line-height: 17px;
   background: #0e80bf;
