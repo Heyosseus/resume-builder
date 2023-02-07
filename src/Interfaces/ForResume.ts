@@ -1,0 +1,22 @@
+export type Props = {
+  name: string;
+  surname: string;
+  email: string;
+  phone: string;
+  info: string;
+  image: any;
+  setImage: any;
+  showImage: boolean;
+  position: string;
+  employer: string;
+  startDate: string;
+  endDate: string;
+  experience: string;
+  handleAddInput: any;
+  inputs: any;
+  school: string;
+  degree: string;
+  endOfStudy: string;
+  bio: string;
+  setName?: React.Dispatch<React.SetStateAction<string>>;
+};

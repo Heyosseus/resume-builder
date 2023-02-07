@@ -138,3 +138,7 @@ export const Toggle = styled.button`
     cursor: pointer;
   }
 `;
+
+export const ForFlex = styled.div`
+  display: flex;
+`
