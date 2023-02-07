@@ -1,16 +1,20 @@
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { useContext, useRef } from "react";
-import styled from "styled-components";
-import { InputContext } from "../contexts/InputContext";
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import { InputsType } from '../Interfaces/ForPersonal';
 
-import { CaretCircleLeft, Warning, CheckCircle } from "phosphor-react";
+import {
+  CaretCircleLeft,
+  Warning,
+  CheckCircle,
+} from 'phosphor-react';
 
 import {
   validateEmail,
   validateGeorgian,
   validateGeorgianPhone,
-} from "../utils/Validation";
+} from '../utils/Validation';
 import {
   Container,
   Content,
@@ -28,18 +32,8 @@ import {
   UploadPhoto,
   WarningMessage,
   WrapperForPhoto,
-} from "../styles/StylesForPages";
-
-
-
-type Inputs = {
-  firstname: string;
-  surname: string;
-  email: string;
-  phone: string;
-  info: string;
-};
-
+  ForFlex,
+} from '../styles/ForPages';
 
 function PersonalInfo(props: any) {
   const {
@@ -64,8 +58,7 @@ function PersonalInfo(props: any) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
-
+  } = useForm<InputsType>();
 
   const navigate = useNavigate();
   const clearStorage = () => {
@@ -75,16 +68,17 @@ function PersonalInfo(props: any) {
     setInfo('');
     setPhone('');
     setImage('');
-    navigate('/');
   };
 
   const onSubmit = () => {
-    navigate("/experience");
+    navigate('/experience');
   };
 
   //For image upload
   const hiddenFileInput = useRef<HTMLInputElement>(null as any);
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setImage(event.target.files![0]);
   };
 
@@ -93,17 +87,16 @@ function PersonalInfo(props: any) {
     hiddenFileInput.current.click();
   };
 
-
-
   return (
-    <div style={{ display: "flex" }}>
+    <div>
       <Container>
-        <CaretCircleLeft
-          size={38}
-          style={{ color: "black" }}
-          onClick={clearStorage}
-        />
-
+        <Link to="/">
+          <CaretCircleLeft
+            size={38}
+            style={{ color: 'black' }}
+            onClick={clearStorage}
+          />
+        </Link>
         <Content>
           <Wrapper>
             <Header>პირადი ინფო</Header>
@@ -121,25 +114,29 @@ function PersonalInfo(props: any) {
                   value={name}
                   style={{
                     border: errors.firstname
-                      ? "1px solid red"
+                      ? '1px solid red'
                       : !errors.firstname
-                      ? "1px solid gray"
-                      : "1px solid green",
+                      ? '1px solid gray'
+                      : '1px solid green',
                   }}
-                  {...register("firstname", {
+                  {...register('firstname', {
                     required: true,
                     minLength: 2,
                     validate: validateGeorgian,
                   })}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChange(event, "firstname")
-                  }
+                  onChange={(
+                    event: React.ChangeEvent<HTMLInputElement>
+                  ) => handleChange(event, 'firstname')}
                 ></Input>
                 <Error>
-                  {errors.firstname && <Warning size={16} color="red" />}
+                  {errors.firstname && (
+                    <Warning size={16} color="red" />
+                  )}
                 </Error>
               </FormInput>
-              <WarningMessage>მინიმუმ 2 ასო, ქართული ასოები</WarningMessage>
+              <WarningMessage>
+                მინიმუმ 2 ასო, ქართული ასოები
+              </WarningMessage>
             </FormContainer>
             <FormContainer>
               <Label>გვარი</Label>
@@ -150,35 +147,45 @@ function PersonalInfo(props: any) {
                   maxLength={20}
                   value={surname}
                   style={{
-                    border: errors.surname ? "1px solid red" : "1px solid gray",
+                    border: errors.surname
+                      ? '1px solid red'
+                      : '1px solid gray',
                   }}
-                  {...register("surname", {
+                  {...register('surname', {
                     required: true,
                     minLength: 2,
                     validate: validateGeorgian,
                   })}
                   onChange={(event) => {
-                    handleChange(event, "surname");
+                    handleChange(event, 'surname');
                     if (!errors.surname) {
                       setSurname(event.target.value);
                     }
                   }}
                 ></Input>
                 <Error>
-                  {errors.surname && <Warning size={16} color="red" />}
+                  {errors.surname && (
+                    <Warning size={16} color="red" />
+                  )}
                 </Error>
               </FormInput>
-              <WarningMessage>მინიმუმ 2 ასო, ქართული ასოები</WarningMessage>
+              <WarningMessage>
+                მინიმუმ 2 ასო, ქართული ასოები
+              </WarningMessage>
             </FormContainer>
           </ForInputs>
           <WrapperForPhoto>
-            <Label style={{ fontSize: "18px" }}>პირადი ფოტოს ატვირთვა</Label>
-            <UploadPhoto onClick={handleButtonClick}>ატვირთვა</UploadPhoto>
+            <Label style={{ fontSize: '18px' }}>
+              პირადი ფოტოს ატვირთვა
+            </Label>
+            <UploadPhoto onClick={handleButtonClick}>
+              ატვირთვა
+            </UploadPhoto>
             <InputForPhotoUpload
               type="file"
               ref={hiddenFileInput}
               onChange={handleImageUpload}
-              style={{ display: "none" }}
+              style={{ display: 'none' }}
             />
           </WrapperForPhoto>
           <AnotherWrapper>
@@ -187,7 +194,7 @@ function PersonalInfo(props: any) {
               placeholder="ზოგადი ინფო შენ შესახებ"
               name="info"
               value={info}
-              onChange={(event) => handleChange(event, "info")}
+              onChange={(event) => handleChange(event, 'info')}
             ></TextArea>
           </AnotherWrapper>
           <AnotherWrapper>
@@ -198,26 +205,30 @@ function PersonalInfo(props: any) {
                 placeholder="anzor666@redberry.ge"
                 value={email}
                 style={{
-                  width: "100%",
+                  width: '100%',
                   border: errors.email
-                    ? "1px solid red"
+                    ? '1px solid red'
                     : !errors.firstname
-                    ? "1px solid green"
-                    : "",
+                    ? '1px solid green'
+                    : '',
                 }}
-                {...register("email", {
+                {...register('email', {
                   required: true,
                   minLength: 2,
                   validate: validateEmail,
                 })}
-                onChange={(event) => handleChange(event, "email")}
+                onChange={(event) => handleChange(event, 'email')}
               ></Input>
               <Error>
                 {errors.email && <Warning size={16} color="red" />}
-                {!errors.email && <CheckCircle size={22} color="green" />}
+                {!errors.email && (
+                  <CheckCircle size={22} color="green" />
+                )}
               </Error>
             </FormInput>
-            <WarningMessage>უნდა მთავრდებოდეს @redberry.ge-ით</WarningMessage>
+            <WarningMessage>
+              უნდა მთავრდებოდეს @redberry.ge-ით
+            </WarningMessage>
           </AnotherWrapper>
           <AnotherWrapper>
             <Label>მობილურის ნომერი</Label>
@@ -227,19 +238,19 @@ function PersonalInfo(props: any) {
                 placeholder="+995 551 12 34 56"
                 value={phone}
                 style={{
-                  width: "100%",
+                  width: '100%',
                   border: errors.phone
-                    ? "1px solid red"
+                    ? '1px solid red'
                     : !errors.firstname
-                    ? "1px solid green"
-                    : "",
+                    ? '1px solid green'
+                    : '',
                 }}
-                {...register("phone", {
+                {...register('phone', {
                   required: true,
                   minLength: 2,
                   validate: validateGeorgianPhone,
                 })}
-                onChange={(event) => handleChange(event, "phone")}
+                onChange={(event) => handleChange(event, 'phone')}
               ></Input>
               <Error>
                 {errors.phone && <Warning size={16} color="red" />}
@@ -283,4 +294,3 @@ const Error = styled.div`
 `;
 
 const InputForPhotoUpload = styled.input``;
-

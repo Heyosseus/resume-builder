@@ -17,7 +17,8 @@ import {
   TextArea,
   WarningMessage,
   Toggle,
-} from '../styles/StylesForPages';
+  ForFlex,
+} from '../styles/ForPages';
 
 function Experience(props: any) {
   const {
@@ -63,7 +64,7 @@ function Experience(props: any) {
     formState: { errors },
   } = useForm();
   return (
-    <div style={{ display: 'flex' }}>
+    <ForFlex>
       <Container>
         <Link to="/">
           <CaretCircleLeft
@@ -161,7 +162,7 @@ function Experience(props: any) {
             <Line style={{ background: '#C1C1C1' }}></Line>
             <Button onClick={handleAddInput}>
               მეტი გამოცდილების დამატება
-            </Button>         
+            </Button>
           </AnotherWrapper>
           <ButtonContainer>
             <Link to="/personal">
@@ -173,7 +174,7 @@ function Experience(props: any) {
           </ButtonContainer>
         </Content>
       </Container>
-    </div>
+    </ForFlex>
   );
 }
 
