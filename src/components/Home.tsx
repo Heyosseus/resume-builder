@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import logo from '../assets/logo.png';
 import secondaryLogo from '../assets/logo-bg.png';
 import background from '../assets/background.png';
+import { Content, Logo, Line, Button, SecondaryLogo } from '../styles/HomeStyle';
 import { Link } from 'react-router-dom';
 
 function Home() {
@@ -27,43 +28,4 @@ const Container = styled.div`
   background-size: cover;
   height: 100vh;
   width: 100vw;
-  
-`;
-
-const Logo = styled.img``;
-
-const Line = styled.div`
-  height: 1px;
-  width: 100%;
-  background-color: #1a1a1a;
-  margin-top: 24px;
-`;
-
-const Content = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 90%;
-  position: relative;
-`
-const Button = styled.button`
-  width: 464px;
-  height: 60px;
-  border-radius: 8px;
-  font-weight: 500;
-  line-height: 25px;
-  font-size: 20px;
-  background-color: #1a1a1a;
-  color: #fff;
-  z-index: 11;
-  :hover {
-    cursor: pointer;
-  }
-`;
-
-const SecondaryLogo = styled.img`
-  z-index: 0;
-  position: absolute;
-  top: 413px;
-  left: 1006px;
 `;
