@@ -1,7 +1,8 @@
-import React, { useEffect , useState} from "react";
-import styled from "styled-components";
-import { CaretCircleLeft } from "phosphor-react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { CaretCircleLeft } from 'phosphor-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { OptionType } from '../Interfaces/ForEdu';
 import {
   Container,
   Content,
@@ -16,13 +17,7 @@ import {
   TextArea,
   WarningMessage,
   Toggle,
-} from "../styles/StylesForPages";
-
-interface Option { 
-  id: number;
-  name: string;
-  title: string;
-}
+} from '../styles/ForPages';
 
 function Education(props: any) {
   const {
@@ -33,7 +28,6 @@ function Education(props: any) {
     setEndDate,
     setExperience,
     handleAddInput,
-    inputs,
     setName,
     setSurname,
     setEmail,
@@ -52,134 +46,192 @@ function Education(props: any) {
     setBio,
     display,
     setDisplay,
+    message,
+    setMessage,
+    image,
+    name,
+    surname,
+    email,
+    phone,
+    info,
+    experience,
+    startDate,
+    endDate,
   } = props;
 
   const navigate = useNavigate();
 
   const clearStorageForEdu = () => {
-    setStartDate("");
-    setEndDate("");
-    setPosition("");
-    setName("");
-    setSurname("");
-    setEmail("");
-    setPhone("");
-    setInfo("");
-    setEmployer("");
-    setExperience("");
-    navigate("/");
+    setStartDate('');
+    setEndDate('');
+    setPosition('');
+    setName('');
+    setSurname('');
+    setEmail('');
+    setPhone('');
+    setInfo('');
+    setEmployer('');
+    setExperience('');
+    navigate('/');
   };
 
-  const handleFinish = () => {
-    setDisplay(!display);
+  const [names, setNames] = useState('');
+
+  const endpoint = 'https://resume.redberryinternship.ge/api/degrees';
+  const url = 'https://resume.redberryinternship.ge/api/cvs';
+
+  const [options, setOptions] = useState<OptionType[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        setOptions(data);
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const data = {
+    name: name,
+    surname: surname,
+    email: email,
+    phone_number: phone,
+    experiences: [
+      {
+        position: position,
+        employer: employer,
+        start_date: startDate,
+        due_date: endDate,
+        description: experience,
+      },
+    ],
+    educations: [
+      {
+        institute: school,
+        degree: degree,
+        due_date: endOfStudy,
+        description: bio,
+      },
+    ],
+    image: image,
+    about_me: info,
   };
-const endpoint = "https://resume.redberryinternship.ge/api/degrees";
-
-const [options, setOptions] = useState<Option[]>([]);
-
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await fetch(endpoint, {
-        method: "GET",
+  const handleSubmit = async () => {
+    const response = await fetch(
+      'https://resume.redberryinternship.ge/api/cvs',
+      {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-      });
+        body: JSON.stringify(data),
+      }
+    );
 
-      const data = await response.json();
-      setOptions(data);
-      console.log(data);
-    } catch (error) {
-      console.error(error);
+    if (response.status === 201) {
+      setMessage('რეზიუმე წარმატებით გაიგზავნა  🎉');
+      console.log('რეზიუმე წარმატებით გაიგზავნა', response);
+    } else {
+      setMessage('რეზიუმე ვერ გაიგზავნა');
+      console.error(response);
     }
   };
 
-  fetchData();
-}, []);
-return (
-  <div>
-    <Container>
-      <Link to="/">
-        <CaretCircleLeft
-          size={38}
-          style={{ color: "black" }}
-          onClick={clearStorageForEdu}
-        />
-      </Link>
-      <Content>
-        <Wrapper>
-          <Header>განათლება</Header>
-          <PageCount>3/3</PageCount>
-        </Wrapper>
-        <Line></Line>
-        <ContainerForInputs>
-          <FormContainer>
-            <Label>სასწავლებელი</Label>
-            <Input
-              type="text"
-              placeholder="სასწავლებელი"
-              value={school}
-              style={{ width: "100%" }}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(event, "school")
-              }
-            ></Input>
-            <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
-          </FormContainer>
-        </ContainerForInputs>
-        <ForDates>
+  return (
+    <div>
+      <Container>
+        <Link to="/">
+          <CaretCircleLeft
+            size={38}
+            style={{ color: 'black' }}
+            onClick={clearStorageForEdu}
+          />
+        </Link>
+        <Content>
+          <Wrapper>
+            <Header>განათლება</Header>
+            <PageCount>3/3</PageCount>
+          </Wrapper>
+          <Line></Line>
+          <ContainerForInputs>
+            <FormContainer>
+              <Label>სასწავლებელი</Label>
+              <Input
+                type="text"
+                placeholder="სასწავლებელი"
+                value={school}
+                style={{ width: '100%' }}
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'school')}
+              ></Input>
+              <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
+            </FormContainer>
+          </ContainerForInputs>
+          <ForDates>
+            <AnotherWrapper>
+              <Label>ხარისხი</Label>
+              <Select
+                onChange={(
+                  event: React.ChangeEvent<HTMLSelectElement>
+                ) => handleChange(event, 'degree')}
+              >
+                {options.map((option) => (
+                  <Option key={option.id} value={option.title}>
+                    {option.title}
+                  </Option>
+                ))}
+              </Select>
+            </AnotherWrapper>
+            <AnotherWrapper>
+              <Label>დამთავრების რიცხვი</Label>
+              <Input
+                type="date"
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'endOfStudy')}
+              ></Input>
+            </AnotherWrapper>
+          </ForDates>
           <AnotherWrapper>
-            <Label>ხარისხი</Label>
-            <Select
-              onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-                handleChange(event, "degree")
-              }
-            >
-              {options.map((option) => (
-                <Option key={option.id} value={option.title}>
-                  {option.title}
-                </Option>
-              ))}
-            </Select>
+            <Label>აღწერა</Label>
+            <TextArea
+              placeholder="განათლების აღწერა"
+              style={{ height: '179px' }}
+              value={bio}
+              onChange={(
+                event: React.ChangeEvent<HTMLTextAreaElement>
+              ) => handleChange(event, 'bio')}
+            ></TextArea>
           </AnotherWrapper>
-        <AnotherWrapper>
-          <Label>დამთავრების რიცხვი</Label>
-          <Input
-            type="date"
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              handleChange(event, "endOfStudy")
-            }
-          ></Input>
-        </AnotherWrapper>
-        </ForDates>
-        <AnotherWrapper>
-          <Label>აღწერა</Label>
-          <TextArea
-            placeholder="განათლების აღწერა"
-            style={{ height: "179px" }}
-            value={bio}
-            onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
-              handleChange(event, "bio")
-            }
-          ></TextArea>
-        </AnotherWrapper>
-        <AnotherWrapper>
-          <Line style={{ background: "#C1C1C1" }}></Line>
-        </AnotherWrapper>
-        <Button>მეტი გამოცდილების დამატება</Button>
-        <ButtonContainer>
-          <Link to="/experience">
-            <Toggle>უკან</Toggle>
-          </Link>
-          <Link to="/finish">
-            <Toggle onClick={handleFinish}>დასრულება</Toggle>
-          </Link>
-        </ButtonContainer>
-      </Content>
-    </Container>
-  </div>
-);
+          <AnotherWrapper>
+            <Line style={{ background: '#C1C1C1' }}></Line>
+          </AnotherWrapper>
+          <Button>მეტი გამოცდილების დამატება</Button>
+          <ButtonContainer>
+            <Link to="/experience">
+              <Toggle>უკან</Toggle>
+            </Link>
+            <Link to="/finish">
+              <Toggle onClick={handleSubmit}>დასრულება</Toggle>
+            </Link>
+          </ButtonContainer>
+        </Content>
+      </Container>
+    </div>
+  );
 }
 
 export default Education;
@@ -219,8 +271,6 @@ const Button = styled.button`
     cursor: pointer;
   }
 `;
-
-
 
 const Select = styled.select`
   width: 371px;
