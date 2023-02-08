@@ -57,11 +57,12 @@ export const Input = styled.input`
   height: 48px;
   border-radius: 4px;
   outline: none; 
-  /* border: 1px solid #bcbcbc; */
+  border: 1px solid #bcbcbc;
   border: none;
   background: white;
   padding: 13px 15px;
   font-size: 16px;
+
   ::placeholder {
     font-weight: 400;
     line-height: 21px;
@@ -142,3 +143,19 @@ export const Toggle = styled.button`
 export const ForFlex = styled.div`
   display: flex;
 `
+
+export const FormInput = styled.form`
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+  background: white;
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-direction: row-reverse;
+`;
+
+export const Error = styled.div`
+  margin-right: 12px;
+  position: absolute;
+`;

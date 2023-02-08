@@ -13,10 +13,10 @@ export type Props = {
   endDate: string;
   experience: string;
   handleAddInput: any;
-  inputs: any;
   school: string;
   degree: string;
   endOfStudy: string;
   bio: string;
+  experienceContent: any;
   setName?: React.Dispatch<React.SetStateAction<string>>;
 };

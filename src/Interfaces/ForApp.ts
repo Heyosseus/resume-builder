@@ -5,3 +5,10 @@ export interface InputFields {
   endDate: string;
   experience: string;
 }
+
+export interface InputFieldsForEducation {
+  school: string;
+  degree: string;
+  endOfStudy: string;
+  bio: string;
+}

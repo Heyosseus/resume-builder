@@ -13,8 +13,22 @@ import PersonalInfo from './pages/PersonalInfo';
 import Experience from './pages/Experience';
 import Education from './pages/Education';
 import ResumeContent from './components/ResumeContent';
-import {InputFields} from './Interfaces/ForApp'
-import { Wrapper, Container, ResumeContainer, ResumeWrapper,SuccessCard } from './styles/AppStyle';
+import {
+  InputFields,
+  InputFieldsForEducation,
+} from './Interfaces/ForApp';
+import {
+  Wrapper,
+  Container,
+  ResumeContainer,
+  ResumeWrapper,
+  SuccessCard,
+} from './styles/AppStyle';
+import {
+  validateEmail,
+  validateGeorgian,
+  validateGeorgianPhone,
+} from './utils/Validation';
 
 function App() {
   //for personal info
@@ -46,11 +60,12 @@ function App() {
 
   //for post request
   const [message, setMessage] = useState<string>('');
-
+  const [error, setError] = useState();
   const handleDisplay = () => {
     setDisplay(!display);
   };
   // for input fields
+
   const handleChange = (event: any, inputName: string) => {
     switch (inputName) {
       case 'firstname':
@@ -103,7 +118,11 @@ function App() {
     }
   };
 
-  const [inputs, setInputs] = useState<InputFields[]>([
+
+  // for duplicate input fields content when user clicks on button
+  const [experienceContent, setExperienceContent] = useState<
+    InputFields[]
+  >([
     {
       position,
       employer,
@@ -113,9 +132,20 @@ function App() {
     },
   ]);
 
+  const [educationContent, setEducationContent] = useState<
+    InputFieldsForEducation[]
+  >([
+    {
+      school,
+      degree,
+      endOfStudy,
+      bio,
+    },
+  ]);
+
   const handleAddInput = () => {
-    setInputs([
-      ...inputs,
+    setExperienceContent([
+      ...experienceContent,
       {
         position,
         employer,
@@ -123,8 +153,20 @@ function App() {
         endDate,
         experience,
       },
-    ]);
+    ])     
   };
+
+  const handleAddInputForEducation = () => {
+    setEducationContent([
+      ...educationContent,
+      {
+        school,
+        degree,
+        endOfStudy,
+        bio,
+      },
+    ]);
+  }
 
   const childProps = {
     name,
@@ -141,13 +183,15 @@ function App() {
     endDate,
     experience,
     handleAddInput,
-    inputs,
+    handleAddInputForEducation,
+    experienceContent,
+    educationContent,
     school,
     degree,
     endOfStudy,
     bio,
     setName,
-    setSurname, 
+    setSurname,
     setEmail,
     setPhone,
     setInfo,
@@ -163,9 +207,14 @@ function App() {
     setBio,
     message,
     setMessage,
-    handleChange
+    handleChange,
+    validateEmail,
+    validateGeorgian,
+    validateGeorgianPhone,
+    error,
+    setError,
   };
-  
+
   return (
     <Wrapper>
       <GlobalStyles />
@@ -175,27 +224,21 @@ function App() {
           <Route
             path="/personal"
             element={[
-              <PersonalInfo
-                {...childProps}
-              />,
+              <PersonalInfo {...childProps} />,
               <ResumeContent {...childProps} />,
             ]}
           />
           <Route
             path="/experience"
             element={[
-              <Experience
-                {...childProps}
-              />,
+              <Experience {...childProps} />,
               <ResumeContent {...childProps} />,
             ]}
           />
           <Route
             path="/education"
             element={[
-              <Education
-                {...childProps}
-              />,
+              <Education {...childProps} />,
               <ResumeContent {...childProps} />,
             ]}
           />
@@ -241,4 +284,3 @@ function App() {
 }
 
 export default App;
-

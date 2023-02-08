@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { InputsType } from '../Interfaces/ForPersonal';
+
 
 import {
   CaretCircleLeft,
@@ -32,7 +32,8 @@ import {
   UploadPhoto,
   WarningMessage,
   WrapperForPhoto,
-  ForFlex,
+  Error,
+  FormInput,
 } from '../styles/ForPages';
 
 function PersonalInfo(props: any) {
@@ -53,12 +54,6 @@ function PersonalInfo(props: any) {
     handleChange,
   } = props;
 
-  //for react-hook-form
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<InputsType>();
 
   const navigate = useNavigate();
   const clearStorage = () => {
@@ -68,10 +63,6 @@ function PersonalInfo(props: any) {
     setInfo('');
     setPhone('');
     setImage('');
-  };
-
-  const onSubmit = () => {
-    navigate('/experience');
   };
 
   //For image upload
@@ -87,186 +78,189 @@ function PersonalInfo(props: any) {
     hiddenFileInput.current.click();
   };
 
+// for button that navigates to next page
+const submitForm = () => {
+  if (validateGeorgian(name) === false ||  validateGeorgian(surname) === false || validateEmail(email) === false || validateGeorgianPhone(phone) === false) {
+    return false;
+  }
+  else {navigate('/experience')};
+    return true;
+};
+
   return (
-    <div>
-      <Container>
-        <Link to="/">
-          <CaretCircleLeft
-            size={38}
-            style={{ color: 'black' }}
-            onClick={clearStorage}
-          />
-        </Link>
-        <Content>
-          <Wrapper>
-            <Header>პირადი ინფო</Header>
-            <PageCount>1/3</PageCount>
-          </Wrapper>
-          <Line></Line>
-          <ForInputs>
-            <FormContainer>
-              <Label>სახელი</Label>
-              <FormInput>
-                <Input
-                  type="text"
-                  placeholder="ანზორ"
-                  maxLength={14}
-                  value={name}
-                  style={{
-                    border: errors.firstname
-                      ? '1px solid red'
-                      : !errors.firstname
-                      ? '1px solid gray'
-                      : '1px solid green',
-                  }}
-                  {...register('firstname', {
-                    required: true,
-                    minLength: 2,
-                    validate: validateGeorgian,
-                  })}
-                  onChange={(
-                    event: React.ChangeEvent<HTMLInputElement>
-                  ) => handleChange(event, 'firstname')}
-                ></Input>
-                <Error>
-                  {errors.firstname && (
-                    <Warning size={16} color="red" />
-                  )}
-                </Error>
-              </FormInput>
-              <WarningMessage>
-                მინიმუმ 2 ასო, ქართული ასოები
-              </WarningMessage>
-            </FormContainer>
-            <FormContainer>
-              <Label>გვარი</Label>
-              <FormInput>
-                <Input
-                  type="text"
-                  placeholder="მუმლაძე"
-                  maxLength={20}
-                  value={surname}
-                  style={{
-                    border: errors.surname
-                      ? '1px solid red'
-                      : '1px solid gray',
-                  }}
-                  {...register('surname', {
-                    required: true,
-                    minLength: 2,
-                    validate: validateGeorgian,
-                  })}
-                  onChange={(event) => {
-                    handleChange(event, 'surname');
-                    if (!errors.surname) {
-                      setSurname(event.target.value);
-                    }
-                  }}
-                ></Input>
-                <Error>
-                  {errors.surname && (
-                    <Warning size={16} color="red" />
-                  )}
-                </Error>
-              </FormInput>
-              <WarningMessage>
-                მინიმუმ 2 ასო, ქართული ასოები
-              </WarningMessage>
-            </FormContainer>
-          </ForInputs>
-          <WrapperForPhoto>
-            <Label style={{ fontSize: '18px' }}>
-              პირადი ფოტოს ატვირთვა
-            </Label>
-            <UploadPhoto onClick={handleButtonClick}>
-              ატვირთვა
-            </UploadPhoto>
-            <InputForPhotoUpload
-              type="file"
-              ref={hiddenFileInput}
-              onChange={handleImageUpload}
-              style={{ display: 'none' }}
-            />
-          </WrapperForPhoto>
-          <AnotherWrapper>
-            <Label>ჩემ შესახებ (არასავალდებულო)</Label>
-            <TextArea
-              placeholder="ზოგადი ინფო შენ შესახებ"
-              name="info"
-              value={info}
-              onChange={(event) => handleChange(event, 'info')}
-            ></TextArea>
-          </AnotherWrapper>
-          <AnotherWrapper>
-            <Label>ელ.ფოსტა</Label>
+    <Container>
+      <Link to="/" style={{ height: '38px' }}>
+        <CaretCircleLeft
+          size={38}
+          style={{ color: 'black' }}
+          onClick={clearStorage}
+        />
+      </Link>
+      <Content>
+        <Wrapper>
+          <Header>პირადი ინფო</Header>
+          <PageCount>1/3</PageCount>
+        </Wrapper>
+        <Line></Line>
+        <ForInputs>
+          <FormContainer>
+            <Label>სახელი</Label>
             <FormInput>
               <Input
-                type="email"
-                placeholder="anzor666@redberry.ge"
-                value={email}
+                type="text"
+                placeholder="ანზორ"
+                maxLength={14}
+                value={name}
+                required={true}
                 style={{
-                  width: '100%',
-                  border: errors.email
-                    ? '1px solid red'
-                    : !errors.firstname
-                    ? '1px solid green'
-                    : '',
+                  border:
+                    validateGeorgian(name) === false && name 
+                      ? '1px solid red'
+                      : validateGeorgian(name) === true && name
+                      ? '1px solid green'
+                      : '1px solid gray',
                 }}
-                {...register('email', {
-                  required: true,
-                  minLength: 2,
-                  validate: validateEmail,
-                })}
-                onChange={(event) => handleChange(event, 'email')}
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => handleChange(event, 'firstname')}
               ></Input>
               <Error>
-                {errors.email && <Warning size={16} color="red" />}
-                {!errors.email && (
+                {validateGeorgian(name) === false && name && (
+                  <Warning size={16} color="red" />
+                )}
+                {validateGeorgian(name) === true && name && (
                   <CheckCircle size={22} color="green" />
                 )}
               </Error>
             </FormInput>
             <WarningMessage>
-              უნდა მთავრდებოდეს @redberry.ge-ით
+              მინიმუმ 2 ასო, ქართული ასოები
             </WarningMessage>
-          </AnotherWrapper>
-          <AnotherWrapper>
-            <Label>მობილურის ნომერი</Label>
+          </FormContainer>
+          <FormContainer>
+            <Label>გვარი</Label>
             <FormInput>
               <Input
-                type="tel"
-                placeholder="+995 551 12 34 56"
-                value={phone}
+                type="text"
+                placeholder="მუმლაძე"
+                maxLength={20}
+                value={surname}
                 style={{
-                  width: '100%',
-                  border: errors.phone
-                    ? '1px solid red'
-                    : !errors.firstname
-                    ? '1px solid green'
-                    : '',
+                  border:
+                    validateGeorgian(surname) === false && surname
+                      ? '1px solid red'
+                      : validateGeorgian(surname) === true && surname
+                      ? '1px solid green'
+                      : '1px solid gray',
                 }}
-                {...register('phone', {
-                  required: true,
-                  minLength: 2,
-                  validate: validateGeorgianPhone,
-                })}
-                onChange={(event) => handleChange(event, 'phone')}
+                onChange={(event) => {
+                  handleChange(event, 'surname');
+                }}
               ></Input>
               <Error>
-                {errors.phone && <Warning size={16} color="red" />}
-                {/* {!errors.phone && <CheckCircle size={22} color="green" />} */}
+                {validateGeorgian(surname) === false && surname && (
+                  <Warning size={16} color="red" />
+                )}
+                {validateGeorgian(surname) === true && surname && (
+                  <CheckCircle size={22} color="green" />
+                )}
               </Error>
             </FormInput>
             <WarningMessage>
-              უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს
+              მინიმუმ 2 ასო, ქართული ასოები
             </WarningMessage>
-          </AnotherWrapper>
-          <WrapperForButton>
-            <Toggle onClick={handleSubmit(onSubmit)}>შემდეგი</Toggle>
-          </WrapperForButton>
-        </Content>
-      </Container>
-    </div>
+          </FormContainer>
+        </ForInputs>
+        <WrapperForPhoto>
+          <Label style={{ fontSize: '18px' }}>
+            პირადი ფოტოს ატვირთვა
+          </Label>
+          <UploadPhoto onClick={handleButtonClick}>
+            ატვირთვა
+          </UploadPhoto>
+          <InputForPhotoUpload
+            type="file"
+            ref={hiddenFileInput}
+            onChange={handleImageUpload}
+            style={{ display: 'none' }}
+          />
+        </WrapperForPhoto>
+        <AnotherWrapper>
+          <Label>ჩემ შესახებ (არასავალდებულო)</Label>
+          <TextArea
+            placeholder="ზოგადი ინფო შენ შესახებ"
+            name="info"
+            value={info}
+            onChange={(event) => handleChange(event, 'info')}
+          ></TextArea>
+        </AnotherWrapper>
+        <AnotherWrapper>
+          <Label>ელ.ფოსტა</Label>
+          <FormInput>
+            <Input
+              type="email"
+              placeholder="anzor666@redberry.ge"
+              value={email}
+              style={{
+                width: '100%',
+                border:
+                  validateEmail(email) === false && email
+                    ? '1px solid red'
+                    : validateEmail(email) === true && email
+                    ? '1px solid green'
+                    : '1px solid gray',
+              }}
+              onChange={(event) => handleChange(event, 'email')}
+            ></Input>
+            <Error>
+              {validateEmail(email) === false && email && (
+                <Warning size={16} color="red" />
+              )}
+              {validateEmail(email) === true && email && (
+                <CheckCircle size={22} color="green" />
+              )}
+            </Error>
+          </FormInput>
+          <WarningMessage>
+            უნდა მთავრდებოდეს @redberry.ge-ით
+          </WarningMessage>
+        </AnotherWrapper>
+        <AnotherWrapper>
+          <Label>მობილურის ნომერი</Label>
+          <FormInput>
+            <Input
+              type="tel"
+              placeholder="+995 551 12 34 56"
+              value={phone}
+              style={{
+                width: '100%',
+                border:
+                  validateGeorgianPhone(phone) === false && phone
+                    ? '1px solid red'
+                    : validateGeorgianPhone(phone) === true && phone
+                    ? '1px solid green'
+                    : '1px solid gray',
+              }}
+              onChange={(event) => handleChange(event, 'phone')}
+            ></Input>
+            <Error>
+              {validateGeorgianPhone(phone) === false && phone && (
+                <Warning size={16} color="red" />
+              )}
+              {validateGeorgianPhone(phone) === true && phone && (
+                <CheckCircle size={22} color="green" />
+              )}
+            </Error>
+          </FormInput>
+          <WarningMessage>
+            უნდა აკმაყოფილებდეს ქართული მობილურის ნომრის ფორმატს
+          </WarningMessage>
+        </AnotherWrapper>
+        <WrapperForButton>
+          <Toggle onClick={submitForm}>შემდეგი</Toggle>
+        </WrapperForButton>
+      </Content>
+    </Container>
   );
 }
 
@@ -277,20 +271,5 @@ const WrapperForButton = styled(AnotherWrapper)`
   margin-top: 61px;
 `;
 
-const FormInput = styled.form`
-  width: 100%;
-  height: 48px;
-  border-radius: 4px;
-  background: white;
-  display: flex;
-  align-items: center;
-  position: relative;
-  flex-direction: row-reverse;
-`;
-
-const Error = styled.div`
-  margin-right: 12px;
-  position: absolute;
-`;
 
 const InputForPhotoUpload = styled.input``;

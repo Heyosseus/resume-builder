@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { CaretCircleLeft } from 'phosphor-react';
+import {
+  CaretCircleLeft,
+  CheckCircle,
+  Warning,
+} from 'phosphor-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { OptionType } from '../Interfaces/ForEdu';
 import {
@@ -17,7 +21,10 @@ import {
   TextArea,
   WarningMessage,
   Toggle,
+  Error,
+  FormInput,
 } from '../styles/ForPages';
+import { validateGeorgian } from '../utils/Validation';
 
 function Education(props: any) {
   const {
@@ -57,11 +64,13 @@ function Education(props: any) {
     experience,
     startDate,
     endDate,
+    educationContent,
+    handleAddInputForEducation
   } = props;
 
   const navigate = useNavigate();
-
   const clearStorageForEdu = () => {
+    localStorage.clear();
     setStartDate('');
     setEndDate('');
     setPosition('');
@@ -72,10 +81,14 @@ function Education(props: any) {
     setInfo('');
     setEmployer('');
     setExperience('');
+    setSchool('');
+    setDegree('');
+    setEndOfStudy('');
+    setBio('');
+    setMessage('');
     navigate('/');
   };
 
-  const [names, setNames] = useState('');
 
   const endpoint = 'https://resume.redberryinternship.ge/api/degrees';
   const url = 'https://resume.redberryinternship.ge/api/cvs';
@@ -149,10 +162,12 @@ function Education(props: any) {
     }
   };
 
+
+
   return (
     <div>
       <Container>
-        <Link to="/">
+        <Link to="/" style={{ height: '38px' }}>
           <CaretCircleLeft
             size={38}
             style={{ color: 'black' }}
@@ -165,61 +180,87 @@ function Education(props: any) {
             <PageCount>3/3</PageCount>
           </Wrapper>
           <Line></Line>
-          <ContainerForInputs>
-            <FormContainer>
-              <Label>სასწავლებელი</Label>
-              <Input
-                type="text"
-                placeholder="სასწავლებელი"
-                value={school}
-                style={{ width: '100%' }}
-                onChange={(
-                  event: React.ChangeEvent<HTMLInputElement>
-                ) => handleChange(event, 'school')}
-              ></Input>
-              <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
-            </FormContainer>
-          </ContainerForInputs>
-          <ForDates>
-            <AnotherWrapper>
-              <Label>ხარისხი</Label>
-              <Select
-                onChange={(
-                  event: React.ChangeEvent<HTMLSelectElement>
-                ) => handleChange(event, 'degree')}
-              >
-                {options.map((option) => (
-                  <Option key={option.id} value={option.title}>
-                    {option.title}
-                  </Option>
-                ))}
-              </Select>
-            </AnotherWrapper>
-            <AnotherWrapper>
-              <Label>დამთავრების რიცხვი</Label>
-              <Input
-                type="date"
-                onChange={(
-                  event: React.ChangeEvent<HTMLInputElement>
-                ) => handleChange(event, 'endOfStudy')}
-              ></Input>
-            </AnotherWrapper>
-          </ForDates>
-          <AnotherWrapper>
-            <Label>აღწერა</Label>
-            <TextArea
-              placeholder="განათლების აღწერა"
-              style={{ height: '179px' }}
-              value={bio}
-              onChange={(
-                event: React.ChangeEvent<HTMLTextAreaElement>
-              ) => handleChange(event, 'bio')}
-            ></TextArea>
-          </AnotherWrapper>
-          <AnotherWrapper>
-            <Line style={{ background: '#C1C1C1' }}></Line>
-          </AnotherWrapper>
-          <Button>მეტი გამოცდილების დამატება</Button>
+
+          {educationContent.map((index: any) => (
+            <div key={index}>
+              <ContainerForInputs>
+                <FormContainer>
+                  <Label>სასწავლებელი</Label>
+                  <FormInput>
+                    <Input
+                      type="text"
+                      placeholder="სასწავლებელი"
+                      value={school}
+                      style={{
+                        width: '100%',
+                        border:
+                          validateGeorgian(school) === false && school
+                            ? '1px solid red'
+                            : validateGeorgian(school) === true &&
+                              school
+                            ? '1px solid green'
+                            : '1px solid gray',
+                      }}
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => handleChange(event, 'school')}
+                    ></Input>
+                    <Error>
+                      {validateGeorgian(school) === false &&
+                        school && <Warning size={16} color="red" />}
+                      {validateGeorgian(school) === true &&
+                        school && (
+                          <CheckCircle size={22} color="green" />
+                        )}
+                    </Error>
+                  </FormInput>
+                  <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
+                </FormContainer>
+              </ContainerForInputs>
+              <ForDates>
+                <AnotherWrapper>
+                  <Label>ხარისხი</Label>
+                  <Select
+                    onChange={(
+                      event: React.ChangeEvent<HTMLSelectElement>
+                    ) => handleChange(event, 'degree')}
+                  >
+                    {options.map((option) => (
+                      <Option key={option.id} value={option.title}>
+                        {option.title}
+                      </Option>
+                    ))}
+                  </Select>
+                </AnotherWrapper>
+                <AnotherWrapper>
+                  <Label>დამთავრების რიცხვი</Label>
+                  <Input
+                    type="date"
+                    onChange={(
+                      event: React.ChangeEvent<HTMLInputElement>
+                    ) => handleChange(event, 'endOfStudy')}
+                  ></Input>
+                </AnotherWrapper>
+              </ForDates>
+              <AnotherWrapper>
+                <Label>აღწერა</Label>
+                <TextArea
+                  placeholder="განათლების აღწერა"
+                  style={{ height: '179px' }}
+                  value={bio}
+                  onChange={(
+                    event: React.ChangeEvent<HTMLTextAreaElement>
+                  ) => handleChange(event, 'bio')}
+                ></TextArea>
+              </AnotherWrapper>
+              <AnotherWrapper>
+                <Line style={{ background: '#C1C1C1' }}></Line>
+              </AnotherWrapper>
+              <Button onClick={handleAddInputForEducation}>
+                მეტი გამოცდილების დამატება
+              </Button>
+            </div>
+          ))}
           <ButtonContainer>
             <Link to="/experience">
               <Toggle>უკან</Toggle>
