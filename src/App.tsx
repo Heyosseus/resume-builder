@@ -38,6 +38,7 @@ function App() {
   const [email, setEmail] = useLocalStorage('email', '');
   const [phone, setPhone] = useLocalStorage('phone', '');
   const [image, setImage] = useLocalStorage('image', '');
+  const [imageData, setImageData] = useState<string | null>(null);
   const [showImage, setShowImage] = useLocalStorage('display', false);
   //for experience
   const [position, setPosition] = useLocalStorage('position', '');
@@ -118,7 +119,6 @@ function App() {
     }
   };
 
-
   // for duplicate input fields content when user clicks on button
   const [experienceContent, setExperienceContent] = useState<
     InputFields[]
@@ -132,6 +132,32 @@ function App() {
     },
   ]);
 
+  const handleAddInput = () => {
+    setExperienceContent([
+      ...experienceContent,
+      {
+        position,
+        employer,
+        startDate,
+        endDate,
+        experience,
+      },
+    ]);
+  };
+
+  // const [experienceContent, setExperienceContent] = useState([
+  //   { employer: "", start: "", end: "", experience: "" },
+  // ]);
+
+  // const handleAddInput = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   name: keyof typeof experienceContent[0],
+  //   index: number
+  // ) => {
+  //   const updatedContent = [...experienceContent];
+  //   updatedContent[index][name] = [position, employer, startDate, endDate, experience];
+  //   setExperienceContent(updatedContent);
+  // };
   const [educationContent, setEducationContent] = useState<
     InputFieldsForEducation[]
   >([
@@ -143,19 +169,6 @@ function App() {
     },
   ]);
 
-  const handleAddInput = () => {
-    setExperienceContent([
-      ...experienceContent,
-      {
-        position,
-        employer,
-        startDate,
-        endDate,
-        experience,
-      },
-    ])     
-  };
-
   const handleAddInputForEducation = () => {
     setEducationContent([
       ...educationContent,
@@ -166,7 +179,7 @@ function App() {
         bio,
       },
     ]);
-  }
+  };
 
   const childProps = {
     name,
@@ -213,6 +226,8 @@ function App() {
     validateGeorgianPhone,
     error,
     setError,
+    imageData,
+    setImageData,
   };
 
   return (

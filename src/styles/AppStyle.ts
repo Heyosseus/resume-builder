@@ -22,9 +22,9 @@ export const ResumeWrapper = styled.div`
 export const ResumeContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 90vh;
+  height: 91vh;
   border: 1px solid black;
-  width: 822px;
+  width: 788px;
   padding-left: 20px;
 `;
 

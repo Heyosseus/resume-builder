@@ -65,7 +65,7 @@ function Education(props: any) {
     startDate,
     endDate,
     educationContent,
-    handleAddInputForEducation
+    handleAddInputForEducation,
   } = props;
 
   const navigate = useNavigate();
@@ -88,7 +88,6 @@ function Education(props: any) {
     setMessage('');
     navigate('/');
   };
-
 
   const endpoint = 'https://resume.redberryinternship.ge/api/degrees';
   const url = 'https://resume.redberryinternship.ge/api/cvs';
@@ -116,11 +115,26 @@ function Education(props: any) {
     fetchData();
   }, []);
 
+  const [degreeId, setDegreeId] = useState(0);
+
+  const handleDegreeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setDegree(event.target.value);
+     setDegreeId(degree.indexOf(event.target.value)
+     );
+  };
+
+  const storedImage = JSON.parse(localStorage.getItem('image')!);
+  const imageFile = new File([storedImage], 'profile photo', {
+    type: 'image/png', 
+  });
+
   const data = {
     name: name,
     surname: surname,
     email: email,
-    phone_number: phone,
+    phone_number: phone.replace(/\s+/g, ''),
     experiences: [
       {
         position: position,
@@ -133,15 +147,19 @@ function Education(props: any) {
     educations: [
       {
         institute: school,
-        degree: degree,
+        degree_id: degree,
         due_date: endOfStudy,
         description: bio,
       },
     ],
-    image: image,
+    image: imageFile,
     about_me: info,
   };
+
   const handleSubmit = async () => {
+    let formData = new FormData();
+    formData.append('data', JSON.stringify(data));
+
     const response = await fetch(
       'https://resume.redberryinternship.ge/api/cvs',
       {
@@ -149,9 +167,12 @@ function Education(props: any) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        mode: 'cors',
+
+        body: formData,
       }
     );
+    console.log(data);
 
     if (response.status === 201) {
       setMessage('რეზიუმე წარმატებით გაიგზავნა  🎉');
@@ -161,8 +182,6 @@ function Education(props: any) {
       console.error(response);
     }
   };
-
-
 
   return (
     <div>
@@ -220,11 +239,7 @@ function Education(props: any) {
               <ForDates>
                 <AnotherWrapper>
                   <Label>ხარისხი</Label>
-                  <Select
-                    onChange={(
-                      event: React.ChangeEvent<HTMLSelectElement>
-                    ) => handleChange(event, 'degree')}
-                  >
+                  <Select onChange={handleDegreeChange}>
                     {options.map((option) => (
                       <Option key={option.id} value={option.title}>
                         {option.title}

@@ -23,6 +23,7 @@ const ResumeContent: React.FC<Props> = ({
   degree,
   endOfStudy,
   bio,
+  imageData,
 }) => {
   useEffect(() => {
     if (showImage && image instanceof Blob) {

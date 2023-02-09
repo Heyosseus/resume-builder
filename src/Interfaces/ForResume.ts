@@ -18,5 +18,6 @@ export type Props = {
   endOfStudy: string;
   bio: string;
   experienceContent: any;
+  imageData: any;
   setName?: React.Dispatch<React.SetStateAction<string>>;
 };

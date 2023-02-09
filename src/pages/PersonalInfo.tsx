@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-
+import MaskedInput from 'react-text-mask';
 
 import {
   CaretCircleLeft,
@@ -52,8 +52,9 @@ function PersonalInfo(props: any) {
     setImage,
     setShowImage,
     handleChange,
+    imageData,
+    setImageData,
   } = props;
-
 
   const navigate = useNavigate();
   const clearStorage = () => {
@@ -71,21 +72,40 @@ function PersonalInfo(props: any) {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setImage(event.target.files![0]);
+    const blob = new Blob([image!], { type: image!.type });
+    localStorage.setItem('image', JSON.stringify(blob));
+    // const reader = new FileReader();
+    // const blob = new Blob([image!], { type: image!.type });
+    // reader.readAsDataURL(blob);
+    // reader.onload = () => {
+    //   setImageData(reader.result as string);
+    // };
   };
+
+  
 
   const handleButtonClick = () => {
     setShowImage(true);
     hiddenFileInput.current.click();
   };
 
-// for button that navigates to next page
-const submitForm = () => {
-  if (validateGeorgian(name) === false ||  validateGeorgian(surname) === false || validateEmail(email) === false || validateGeorgianPhone(phone) === false) {
-    return false;
-  }
-  else {navigate('/experience')};
+  const formData = new FormData();
+  formData.append('image', image);
+
+  // for button that navigates to next page
+  const submitForm = () => {
+    if (
+      validateGeorgian(name) === false ||
+      validateGeorgian(surname) === false ||
+      validateEmail(email) === false ||
+      validateGeorgianPhone(phone) === false
+    ) {
+      return false;
+    } else {
+      navigate('/experience');
+    }
     return true;
-};
+  };
 
   return (
     <Container>
@@ -114,7 +134,7 @@ const submitForm = () => {
                 required={true}
                 style={{
                   border:
-                    validateGeorgian(name) === false && name 
+                    validateGeorgian(name) === false && name
                       ? '1px solid red'
                       : validateGeorgian(name) === true && name
                       ? '1px solid green'
@@ -228,9 +248,29 @@ const submitForm = () => {
         <AnotherWrapper>
           <Label>მობილურის ნომერი</Label>
           <FormInput>
-            <Input
+            <StyledMaskedInput
               type="tel"
               placeholder="+995 551 12 34 56"
+              mask={[
+                /\+/,
+                /\d/,
+                /\d/,
+                /\d/,
+                ' ',
+                /\d/,
+                /\d/,
+                /\d/,
+                ' ',
+                /\d/,
+                /\d/,
+                ' ',
+                /\d/,
+                /\d/,
+                ' ',
+                /\d/,
+                /\d/,
+              ]}
+              guide={false}
               value={phone}
               style={{
                 width: '100%',
@@ -242,7 +282,7 @@ const submitForm = () => {
                     : '1px solid gray',
               }}
               onChange={(event) => handleChange(event, 'phone')}
-            ></Input>
+            ></StyledMaskedInput>
             <Error>
               {validateGeorgianPhone(phone) === false && phone && (
                 <Warning size={16} color="red" />
@@ -271,5 +311,23 @@ const WrapperForButton = styled(AnotherWrapper)`
   margin-top: 61px;
 `;
 
-
 const InputForPhotoUpload = styled.input``;
+
+const StyledMaskedInput = styled(MaskedInput)`
+  width: 371px;
+  height: 48px;
+  border-radius: 4px;
+  outline: none;
+  border: 1px solid #bcbcbc;
+  border: none;
+  background: white;
+  padding: 13px 15px;
+  font-size: 16px;
+
+  ::placeholder {
+    font-weight: 400;
+    line-height: 21px;
+    color: black;
+    opacity: 60%;
+  }
+`;

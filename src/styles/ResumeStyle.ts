@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   padding: 68px 0 68px 60px;
   justify-content: space-between;
+  height: 100vh;
 `;
 export const ContentContainer = styled.div`
   display: flex;
