@@ -65,122 +65,80 @@ function App() {
   const handleDisplay = () => {
     setDisplay(!display);
   };
-  // for input fields
 
-  const handleChange = (event: any, inputName: string) => {
-    switch (inputName) {
-      case 'firstname':
-        setName(event.target.value);
-        break;
-      case 'surname':
-        setSurname(event.target.value);
-        break;
-      case 'info':
-        setInfo(event.target.value);
-        break;
-      case 'image':
-        setImage(event.target.value);
-        break;
-      case 'email':
-        setEmail(event.target.value);
-        break;
-      case 'phone':
-        setPhone(event.target.value);
-        break;
-      case 'position':
-        setPosition(event.target.value);
-        break;
-      case 'employer':
-        setEmployer(event.target.value);
-        break;
-      case 'start':
-        setStartDate(event.target.value);
-        break;
-      case 'end':
-        setEndDate(event.target.value);
-        break;
-      case 'experience':
-        setExperience(event.target.value);
-        break;
-      case 'school':
-        setSchool(event.target.value);
-        break;
-      case 'degree':
-        setDegree(event.target.value);
-        break;
-      case 'endOfStudy':
-        setEndOfStudy(event.target.value);
-        break;
-      case 'bio':
-        setBio(event.target.value);
-        break;
-      default:
-        break;
-    }
-  };
+  const [count, setCount] = useState(3);
 
   // for duplicate input fields content when user clicks on button
-  const [experienceContent, setExperienceContent] = useState<
-    InputFields[]
-  >([
-    {
-      position,
-      employer,
-      startDate,
-      endDate,
-      experience,
-    },
-  ]);
+
+  const [experienceContent, setExperienceContent] = useLocalStorage(
+    'experiences',
+    [
+      {
+        position: '',
+        employer: '',
+        startDate: '',
+        endDate: '',
+        experience: '',
+      },
+    ]
+  );
 
   const handleAddInput = () => {
     setExperienceContent([
       ...experienceContent,
       {
-        position,
-        employer,
-        startDate,
-        endDate,
-        experience,
+        position: '',
+        employer: '',
+        startDate: '',
+        endDate: '',
+        experience: '',
       },
     ]);
+    setCount(count + 1);
   };
 
-  // const [experienceContent, setExperienceContent] = useState([
-  //   { employer: "", start: "", end: "", experience: "" },
-  // ]);
+  const handleChangeForExp =
+    (index: number, name: keyof InputFields) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const updatedContent = [...experienceContent];
+      updatedContent[index][name] = e.target.value;
+      setExperienceContent(updatedContent);
+    };
 
-  // const handleAddInput = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   name: keyof typeof experienceContent[0],
-  //   index: number
-  // ) => {
-  //   const updatedContent = [...experienceContent];
-  //   updatedContent[index][name] = [position, employer, startDate, endDate, experience];
-  //   setExperienceContent(updatedContent);
-  // };
-  const [educationContent, setEducationContent] = useState<
-    InputFieldsForEducation[]
-  >([
-    {
-      school,
-      degree,
-      endOfStudy,
-      bio,
-    },
-  ]);
+  // for education content duplicate input fields
+  const [educationContent, setEducationContent] = useLocalStorage(
+    'educations',
+    [
+      {
+        school: '',
+        degree: '',
+        endOfStudy: '',
+        bio: '',
+      },
+    ]
+  );
 
   const handleAddInputForEducation = () => {
     setEducationContent([
       ...educationContent,
       {
-        school,
-        degree,
-        endOfStudy,
-        bio,
+        school: '',
+        degree: '',
+        endOfStudy: '',
+        bio: '',
       },
     ]);
   };
 
+  const handleChangeForEdu =
+    (index: number, name: keyof InputFieldsForEducation) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const updatedContentEdu = [...educationContent];
+      updatedContentEdu[index][name] = e.target.value;
+      setEducationContent(updatedContentEdu);
+    };
+
+  // for passing props to children components
   const childProps = {
     name,
     surname,
@@ -196,7 +154,7 @@ function App() {
     endDate,
     experience,
     handleAddInput,
-    handleAddInputForEducation,
+    handleChangeForEdu,
     experienceContent,
     educationContent,
     school,
@@ -220,7 +178,6 @@ function App() {
     setBio,
     message,
     setMessage,
-    handleChange,
     validateEmail,
     validateGeorgian,
     validateGeorgianPhone,
@@ -228,6 +185,9 @@ function App() {
     setError,
     imageData,
     setImageData,
+    handleChangeForExp,
+    handleAddInputForEducation,
+    count,
   };
 
   return (
@@ -266,7 +226,6 @@ function App() {
                     <CaretCircleLeft
                       size={38}
                       style={{ color: 'black' }}
-                      // onClick={clearStorageForEdu}
                     />
                   </Link>
                 </Container>

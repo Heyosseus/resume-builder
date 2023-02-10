@@ -51,10 +51,8 @@ function PersonalInfo(props: any) {
     image,
     setImage,
     setShowImage,
-    handleChange,
-    imageData,
-    setImageData,
   } = props;
+
 
   const navigate = useNavigate();
   const clearStorage = () => {
@@ -81,8 +79,6 @@ function PersonalInfo(props: any) {
     //   setImageData(reader.result as string);
     // };
   };
-
-  
 
   const handleButtonClick = () => {
     setShowImage(true);
@@ -125,13 +121,13 @@ function PersonalInfo(props: any) {
         <ForInputs>
           <FormContainer>
             <Label>სახელი</Label>
-            <FormInput>
+            <FormInput onSubmit={submitForm}>
               <Input
                 type="text"
                 placeholder="ანზორ"
                 maxLength={14}
-                value={name}
                 required={true}
+                value={name}
                 style={{
                   border:
                     validateGeorgian(name) === false && name
@@ -140,9 +136,12 @@ function PersonalInfo(props: any) {
                       ? '1px solid green'
                       : '1px solid gray',
                 }}
+
                 onChange={(
                   event: React.ChangeEvent<HTMLInputElement>
-                ) => handleChange(event, 'firstname')}
+                ) => {
+                  setName(event.target.value);
+                }}
               ></Input>
               <Error>
                 {validateGeorgian(name) === false && name && (
@@ -173,8 +172,10 @@ function PersonalInfo(props: any) {
                       ? '1px solid green'
                       : '1px solid gray',
                 }}
-                onChange={(event) => {
-                  handleChange(event, 'surname');
+                onChange={(
+                  event: React.ChangeEvent<HTMLInputElement>
+                ) => {
+                  setSurname(event.target.value);
                 }}
               ></Input>
               <Error>
@@ -211,7 +212,11 @@ function PersonalInfo(props: any) {
             placeholder="ზოგადი ინფო შენ შესახებ"
             name="info"
             value={info}
-            onChange={(event) => handleChange(event, 'info')}
+            onChange={(
+              event: React.ChangeEvent<HTMLTextAreaElement>
+            ) => {
+              setInfo(event.target.value);
+            }}
           ></TextArea>
         </AnotherWrapper>
         <AnotherWrapper>
@@ -230,7 +235,11 @@ function PersonalInfo(props: any) {
                     ? '1px solid green'
                     : '1px solid gray',
               }}
-              onChange={(event) => handleChange(event, 'email')}
+              onChange={(
+                event: React.ChangeEvent<HTMLInputElement>
+              ) => {
+                setEmail(event.target.value);
+              }}
             ></Input>
             <Error>
               {validateEmail(email) === false && email && (
@@ -281,7 +290,11 @@ function PersonalInfo(props: any) {
                     ? '1px solid green'
                     : '1px solid gray',
               }}
-              onChange={(event) => handleChange(event, 'phone')}
+              onChange={(
+                event: React.ChangeEvent<HTMLInputElement>
+              ) => {
+                setPhone(event.target.value);
+              }}
             ></StyledMaskedInput>
             <Error>
               {validateGeorgianPhone(phone) === false && phone && (

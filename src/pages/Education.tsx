@@ -66,6 +66,8 @@ function Education(props: any) {
     endDate,
     educationContent,
     handleAddInputForEducation,
+    handleChangeForEdu,
+    experienceContent,
   } = props;
 
   const navigate = useNavigate();
@@ -106,7 +108,6 @@ function Education(props: any) {
 
         const data = await response.json();
         setOptions(data);
-        console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -115,19 +116,13 @@ function Education(props: any) {
     fetchData();
   }, []);
 
-  const [degreeId, setDegreeId] = useState(0);
-
-  const handleDegreeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setDegree(event.target.value);
-     setDegreeId(degree.indexOf(event.target.value)
-     );
-  };
+  const id = 1;
+  // const id = options.map((option) => option.id);
+  const [degreeId, setDegreeId] = useState(id);
 
   const storedImage = JSON.parse(localStorage.getItem('image')!);
   const imageFile = new File([storedImage], 'profile photo', {
-    type: 'image/png', 
+    type: 'image/png',
   });
 
   const data = {
@@ -137,19 +132,19 @@ function Education(props: any) {
     phone_number: phone.replace(/\s+/g, ''),
     experiences: [
       {
-        position: position,
-        employer: employer,
-        start_date: startDate,
-        due_date: endDate,
-        description: experience,
+        position: experienceContent[0].position,
+        employer: experienceContent[0].employer,
+        start_date: experienceContent[0].startDate,
+        due_date: experienceContent[0].endDate,
+        description: experienceContent[0].experience,
       },
     ],
     educations: [
       {
-        institute: school,
-        degree_id: degree,
-        due_date: endOfStudy,
-        description: bio,
+        institute: educationContent[0].school,
+        degree_id: id,
+        due_date: educationContent[0].endOfStudy,
+        description: educationContent[0].bio,
       },
     ],
     image: imageFile,
@@ -166,19 +161,19 @@ function Education(props: any) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-        mode: 'cors',
-
         body: formData,
       }
     );
     console.log(data);
+    console.log(imageFile)
 
     if (response.status === 201) {
       setMessage('რეზიუმე წარმატებით გაიგზავნა  🎉');
       console.log('რეზიუმე წარმატებით გაიგზავნა', response);
     } else {
-      setMessage('რეზიუმე ვერ გაიგზავნა');
+      setMessage('რეზიუმე ვერ გაიგზავნა :(');
       console.error(response);
     }
   };
@@ -200,7 +195,7 @@ function Education(props: any) {
           </Wrapper>
           <Line></Line>
 
-          {educationContent.map((index: any) => (
+          {educationContent.map((item: any, index: number) => (
             <div key={index}>
               <ContainerForInputs>
                 <FormContainer>
@@ -209,26 +204,28 @@ function Education(props: any) {
                     <Input
                       type="text"
                       placeholder="სასწავლებელი"
-                      value={school}
+                      name="school"
+                      value={item.school}
                       style={{
                         width: '100%',
                         border:
-                          validateGeorgian(school) === false && school
+                          validateGeorgian(item.school) === false &&
+                          item.school
                             ? '1px solid red'
-                            : validateGeorgian(school) === true &&
-                              school
+                            : validateGeorgian(item.school) ===
+                                true && item.school
                             ? '1px solid green'
                             : '1px solid gray',
                       }}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => handleChange(event, 'school')}
+                      onChange={handleChangeForEdu(index, 'school')}
                     ></Input>
                     <Error>
-                      {validateGeorgian(school) === false &&
-                        school && <Warning size={16} color="red" />}
-                      {validateGeorgian(school) === true &&
-                        school && (
+                      {validateGeorgian(item.school) === false &&
+                        item.school && (
+                          <Warning size={16} color="red" />
+                        )}
+                      {validateGeorgian(item.school) === true &&
+                        item.school && (
                           <CheckCircle size={22} color="green" />
                         )}
                     </Error>
@@ -239,7 +236,15 @@ function Education(props: any) {
               <ForDates>
                 <AnotherWrapper>
                   <Label>ხარისხი</Label>
-                  <Select onChange={handleDegreeChange}>
+                  <Select
+                    style={{
+                      border: item.degree
+                        ? '1px solid green'
+                        : '1px solid gray',
+                    }}
+                    value={item.degree}
+                    onChange={handleChangeForEdu(index, 'degree')}
+                  >
                     {options.map((option) => (
                       <Option key={option.id} value={option.title}>
                         {option.title}
@@ -251,9 +256,14 @@ function Education(props: any) {
                   <Label>დამთავრების რიცხვი</Label>
                   <Input
                     type="date"
-                    onChange={(
-                      event: React.ChangeEvent<HTMLInputElement>
-                    ) => handleChange(event, 'endOfStudy')}
+                    name="endOfStudy"
+                    value={item.endOfStudy}
+                    style={{
+                      border: item.endOfStudy
+                        ? '1px solid green'
+                        : '1px solid gray',
+                    }}
+                    onChange={handleChangeForEdu(index, 'endOfStudy')}
                   ></Input>
                 </AnotherWrapper>
               </ForDates>
@@ -261,21 +271,26 @@ function Education(props: any) {
                 <Label>აღწერა</Label>
                 <TextArea
                   placeholder="განათლების აღწერა"
-                  style={{ height: '179px' }}
-                  value={bio}
-                  onChange={(
-                    event: React.ChangeEvent<HTMLTextAreaElement>
-                  ) => handleChange(event, 'bio')}
+                  style={{
+                    height: '179px',
+                    border: item.bio
+                      ? '1px solid green'
+                      : '1px solid gray',
+                  }}
+                  value={item.bio}
+                  name="bio"
+                  onChange={handleChangeForEdu(index, 'bio')}
                 ></TextArea>
               </AnotherWrapper>
               <AnotherWrapper>
                 <Line style={{ background: '#C1C1C1' }}></Line>
               </AnotherWrapper>
               <Button onClick={handleAddInputForEducation}>
-                მეტი გამოცდილების დამატება
+                მეტი სასწავლებლის დამატება
               </Button>
             </div>
           ))}
+
           <ButtonContainer>
             <Link to="/experience">
               <Toggle>უკან</Toggle>

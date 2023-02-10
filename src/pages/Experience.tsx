@@ -26,7 +26,7 @@ import {
   FormInput,
 } from '../styles/ForPages';
 import { validateGeorgian } from '../utils/Validation';
-import { InputFields } from '../Interfaces/ForApp';
+
 
 function Experience(props: any) {
   const {
@@ -51,6 +51,8 @@ function Experience(props: any) {
     setEmployer,
     startDate,
     endDate,
+    handleChangeForExp,
+    count
   } = props;
 
   // when user navigates to the home page, local storage would be cleared
@@ -63,7 +65,7 @@ function Experience(props: any) {
     setPosition('');
     setName('');
     setSurname('');
-    setImage('')
+    setImage('');
     setEmail('');
     setPhone('');
     setInfo('');
@@ -84,7 +86,7 @@ function Experience(props: any) {
     return true;
   };
 
-
+ 
   return (
     <ForFlex>
       <Container>
@@ -98,12 +100,12 @@ function Experience(props: any) {
         <Content>
           <Wrapper>
             <Header>გამოცდილება</Header>
-            <PageCount>2/3</PageCount>
+            <PageCount>2/{count}</PageCount>
           </Wrapper>
           <Line></Line>
 
-          {experienceContent.map((index: any) => (
-            <div key={index} >
+          {experienceContent.map((item: any, index: number) => (
+            <div key={index}>
               <ContainerForInputs>
                 <FormContainer>
                   <Label>თანამდებობა</Label>
@@ -112,27 +114,28 @@ function Experience(props: any) {
                       type="text"
                       placeholder="დეველოპერი, დიზაინერი, ა.შ"
                       maxLength={44}
-                      value={position}
+                      name="position"
+                      value={item.position}
                       style={{
                         width: '100%',
                         border:
-                          validateGeorgian(position) === false &&
-                          position
+                          validateGeorgian(item.position) === false &&
+                          item.position
                             ? '1px solid red'
-                            : validateGeorgian(position) === true &&
-                              position
+                            : validateGeorgian(item.position) ===
+                                true && item.position
                             ? '1px solid green'
                             : '1px solid gray',
                       }}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => handleChange(event, 'position')}
+                      onChange={handleChangeForExp(index, 'position')}
                     ></Input>
                     <Error>
-                      {validateGeorgian(position) === false &&
-                        position && <Warning size={16} color="red" />}
-                      {validateGeorgian(position) === true &&
-                        position && (
+                      {validateGeorgian(item.position) === false &&
+                        item.position && (
+                          <Warning size={16} color="red" />
+                        )}
+                      {validateGeorgian(item.position) === true &&
+                        item.position && (
                           <CheckCircle size={22} color="green" />
                         )}
                     </Error>
@@ -145,27 +148,27 @@ function Experience(props: any) {
                     <Input
                       type="text"
                       placeholder="დამსაქმებელი"
-                      value={employer}
+                      value={item.employer}
                       style={{
                         width: '100%',
                         border:
-                          validateGeorgian(employer) === false &&
-                          employer
+                          validateGeorgian(item.employer) === false &&
+                          item.employer
                             ? '1px solid red'
-                            : validateGeorgian(employer) === true &&
-                              employer
+                            : validateGeorgian(item.employer) ===
+                                true && item.employer
                             ? '1px solid green'
                             : '1px solid gray',
                       }}
-                      onChange={(
-                        event: React.ChangeEvent<HTMLInputElement>
-                      ) => handleChange(event, 'employer')}
+                      onChange={handleChangeForExp(index, 'employer')}
                     ></Input>
                     <Error>
-                      {validateGeorgian(employer) === false &&
-                        employer && <Warning size={16} color="red" />}
-                      {validateGeorgian(employer) === true &&
-                        employer && (
+                      {validateGeorgian(item.employer) === false &&
+                        item.employer && (
+                          <Warning size={16} color="red" />
+                        )}
+                      {validateGeorgian(item.employer) === true &&
+                        item.employer && (
                           <CheckCircle size={22} color="green" />
                         )}
                     </Error>
@@ -180,19 +183,28 @@ function Experience(props: any) {
                   <Label>დაწყების რიცხვი</Label>
                   <Input
                     type="date"
-                    name={start}
-                    onChange={(
-                      event: React.ChangeEvent<HTMLInputElement>
-                    ) => handleChange(event, 'start')}
+                    name="start"
+                    style={{
+                      border: item.startDate
+                        ? '1px solid green'
+                        : '1px solid gray',
+                    }}
+                    value={item.startDate}
+                    onChange={handleChangeForExp(index, 'startDate')}
                   ></Input>
                 </AnotherWrapper>
                 <AnotherWrapper>
                   <Label>დამთავრების რიცხვი</Label>
                   <Input
                     type="date"
-                    onChange={(
-                      event: React.ChangeEvent<HTMLInputElement>
-                    ) => handleChange(event, 'end')}
+                    name="end"
+                    style={{
+                      border: item.endDate
+                        ? '1px solid green'
+                        : '1px solid gray',
+                    }}
+                    value={item.endDate}
+                    onChange={handleChangeForExp(index, 'endDate')}
                   ></Input>
                 </AnotherWrapper>
               </ForDates>
@@ -200,10 +212,14 @@ function Experience(props: any) {
                 <Label>აღწერა</Label>
                 <TextArea
                   placeholder="როლი თანამდებობაზე და ზოგადი აღწერა"
-                  value={experience}
-                  onChange={(event) =>
-                    handleChange(event, 'experience')
-                  }
+                  name="experience"
+                  style={{
+                    border: item.experience
+                      ? '1px solid green'
+                      : '1px solid gray',
+                  }}
+                  value={item.experience}
+                  onChange={handleChangeForExp(index, 'experience')}
                 ></TextArea>
               </AnotherWrapper>
               <AnotherWrapper>
@@ -214,6 +230,7 @@ function Experience(props: any) {
               </Button>
             </div>
           ))}
+
           <ButtonContainer>
             <Link to="/personal">
               <Toggle>უკან</Toggle>

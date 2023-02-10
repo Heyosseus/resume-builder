@@ -14,16 +14,8 @@ const ResumeContent: React.FC<Props> = ({
   image,
   setImage,
   showImage,
-  position,
-  employer,
-  startDate,
-  experience,
-  endDate,
-  school,
-  degree,
-  endOfStudy,
-  bio,
-  imageData,
+  experienceContent,
+  educationContent,
 }) => {
   useEffect(() => {
     if (showImage && image instanceof Blob) {
@@ -38,6 +30,8 @@ const ResumeContent: React.FC<Props> = ({
       };
     }
   }, [showImage, image]);
+
+ 
 
   return (
     <Wrapper>
@@ -78,30 +72,42 @@ const ResumeContent: React.FC<Props> = ({
             )}
           </ForImage>
         </ContentContainer>
-        {position && (
-          <div>
-            <Line></Line>
-            <HeaderForExperience>გამოცდილება</HeaderForExperience>
-            <Position>
-              {position}, {employer}
-            </Position>
-            <Dates>
-              {[startDate, '-']} {endDate}
-            </Dates>
-            <AboutExperience>{experience}</AboutExperience>
-          </div>
-        )}
-        {school && (
-          <div>
-            <Line></Line>
-            <HeaderForExperience>განათლება</HeaderForExperience>
-            <Position>
-              {[school, ',']} {degree}
-            </Position>
-            <Dates>{endOfStudy}</Dates>
-            <AboutExperience>{bio}</AboutExperience>
-          </div>
-        )}
+        {experienceContent &&
+          experienceContent.map((item: any, index: number) => (
+            <div key={index}>
+              {item.position && (
+                <div>
+                  <Line></Line>
+                  <HeaderForExperience>
+                    გამოცდილება
+                  </HeaderForExperience>
+                  <Position>
+                    {item.position}, {item.employer}
+                  </Position>
+                  <Dates>
+                    {[item.startDate, '-']} {item.endDate}
+                  </Dates>
+                  <AboutExperience>{item.experience}</AboutExperience>
+                </div>
+              )}
+            </div>
+          ))}
+        {educationContent &&
+          educationContent.map((item: any, index: number) => (
+            <div key={index}>
+              {item.school && (
+                <div>
+                  <Line></Line>
+                  <HeaderForExperience>განათლება</HeaderForExperience>
+                  <Position>
+                    {[item.school, ',']} {item.degree}
+                  </Position>
+                  <Dates>{item.endOfStudy}</Dates>
+                  <AboutExperience>{item.bio}</AboutExperience>
+                </div>
+              )}
+            </div>
+          ))}
       </div>
       <Logo src={cv}></Logo>
     </Wrapper>
