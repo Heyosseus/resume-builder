@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import {
-  CaretCircleLeft,
-  CheckCircle,
-  Warning,
-} from 'phosphor-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { CaretCircleLeft, CheckCircle, Warning } from "phosphor-react";
+import { Link, useNavigate } from "react-router-dom";
+import check from "../assets/correct.png";
 import {
   Container,
   Content,
@@ -24,83 +20,44 @@ import {
   ForFlex,
   Error,
   FormInput,
-} from '../styles/ForPages';
-import { validateGeorgian } from '../utils/Validation';
-
+  Check,
+} from "../styles/ForPages";
 
 function Experience(props: any) {
   const {
-    position,
-    employer,
-    experience,
-    handleChange,
-    setStartDate,
-    setEndDate,
-    setExperience,
     handleAddInput,
-    start,
-    end,
     experienceContent,
-    setName,
-    setSurname,
-    setEmail,
-    setPhone,
-    setInfo,
-    setImage,
-    setPosition,
-    setEmployer,
-    startDate,
-    endDate,
     handleChangeForExp,
-    count
+    clearStorage,
   } = props;
 
   // when user navigates to the home page, local storage would be cleared
   const navigate = useNavigate();
 
-  const clearStorageForExp = () => {
-    localStorage.clear();
-    setStartDate('');
-    setEndDate('');
-    setPosition('');
-    setName('');
-    setSurname('');
-    setImage('');
-    setEmail('');
-    setPhone('');
-    setInfo('');
-    setEmployer('');
-    setExperience('');
-    navigate('/');
-  };
-
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
   const submitForm = () => {
-    if (
-      validateGeorgian(position) === false ||
-      validateGeorgian(employer) === false
-    ) {
-      return false;
+    setIsButtonClicked(true);
+    if (!isButtonClicked) {
+      return null;
     } else {
-      navigate('/education');
+      navigate("/education");
     }
-    return true;
   };
 
- 
   return (
     <ForFlex>
       <Container>
-        <Link to="/" style={{ height: '38px' }}>
+        <Link to="/" style={{ height: "38px" }}>
           <CaretCircleLeft
             size={38}
-            style={{ color: 'black' }}
-            onClick={clearStorageForExp}
+            style={{ color: "black" }}
+            onClick={clearStorage}
           />
         </Link>
         <Content>
           <Wrapper>
             <Header>გამოცდილება</Header>
-            <PageCount>2/{count}</PageCount>
+            <PageCount>2/3</PageCount>
           </Wrapper>
           <Line></Line>
 
@@ -117,27 +74,23 @@ function Experience(props: any) {
                       name="position"
                       value={item.position}
                       style={{
-                        width: '100%',
+                        width: "100%",
                         border:
-                          validateGeorgian(item.position) === false &&
-                          item.position
-                            ? '1px solid red'
-                            : validateGeorgian(item.position) ===
-                                true && item.position
-                            ? '1px solid green'
-                            : '1px solid gray',
+                          item.position.length === 0 && isButtonClicked
+                            ? "1px solid red"
+                            : item.position.length >= 2
+                            ? "1px solid green"
+                            : "1px solid gray",
                       }}
-                      onChange={handleChangeForExp(index, 'position')}
+                      onChange={handleChangeForExp(index, "position")}
                     ></Input>
                     <Error>
-                      {validateGeorgian(item.position) === false &&
-                        item.position && (
-                          <Warning size={16} color="red" />
-                        )}
-                      {validateGeorgian(item.position) === true &&
-                        item.position && (
-                          <CheckCircle size={22} color="green" />
-                        )}
+                      {item.position.length === 0 && isButtonClicked && (
+                        <Warning size={16} color="red" />
+                      )}
+                      {item.position.length >= 2 && item.position && (
+                        <Check src={check} />
+                      )}
                     </Error>
                   </FormInput>
                   <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
@@ -150,32 +103,27 @@ function Experience(props: any) {
                       placeholder="დამსაქმებელი"
                       value={item.employer}
                       style={{
-                        width: '100%',
+                        width: "100%",
                         border:
-                          validateGeorgian(item.employer) === false &&
-                          item.employer
-                            ? '1px solid red'
-                            : validateGeorgian(item.employer) ===
-                                true && item.employer
-                            ? '1px solid green'
-                            : '1px solid gray',
+                          item.employer.length === 0 && isButtonClicked
+                            ? "1px solid red"
+                            : item.employer
+                            ? "1px solid green"
+                            : "1px solid gray",
                       }}
-                      onChange={handleChangeForExp(index, 'employer')}
+                      // onBlur={() => setStyle({  isFocused: false })}
+                      onChange={handleChangeForExp(index, "employer")}
                     ></Input>
                     <Error>
-                      {validateGeorgian(item.employer) === false &&
-                        item.employer && (
-                          <Warning size={16} color="red" />
-                        )}
-                      {validateGeorgian(item.employer) === true &&
-                        item.employer && (
-                          <CheckCircle size={22} color="green" />
-                        )}
+                      {item.employer.length === 0 && isButtonClicked && (
+                        <Warning size={16} color="red" />
+                      )}
+                      {item.employer.length >= 2 && item.employer && (
+                        <Check src={check} />
+                      )}
                     </Error>
                   </FormInput>
-                  <WarningMessage>
-                    მინიმუმ 2 ასო სიმბოლო
-                  </WarningMessage>
+                  <WarningMessage>მინიმუმ 2 ასო სიმბოლო</WarningMessage>
                 </FormContainer>
               </ContainerForInputs>
               <ForDates>
@@ -185,12 +133,15 @@ function Experience(props: any) {
                     type="date"
                     name="start"
                     style={{
-                      border: item.startDate
-                        ? '1px solid green'
-                        : '1px solid gray',
+                      border:
+                        item.startDate.length === 0 && isButtonClicked
+                          ? "1px solid red"
+                          : item.startDate.length >= 2
+                          ? "1px solid green"
+                          : "1px solid gray",
                     }}
                     value={item.startDate}
-                    onChange={handleChangeForExp(index, 'startDate')}
+                    onChange={handleChangeForExp(index, "startDate")}
                   ></Input>
                 </AnotherWrapper>
                 <AnotherWrapper>
@@ -199,12 +150,15 @@ function Experience(props: any) {
                     type="date"
                     name="end"
                     style={{
-                      border: item.endDate
-                        ? '1px solid green'
-                        : '1px solid gray',
+                      border:
+                        item.endDate.length === 0 && isButtonClicked
+                          ? "1px solid red"
+                          : item.endDate.length >= 2
+                          ? "1px solid green"
+                          : "1px solid gray",
                     }}
                     value={item.endDate}
-                    onChange={handleChangeForExp(index, 'endDate')}
+                    onChange={handleChangeForExp(index, "endDate")}
                   ></Input>
                 </AnotherWrapper>
               </ForDates>
@@ -215,15 +169,15 @@ function Experience(props: any) {
                   name="experience"
                   style={{
                     border: item.experience
-                      ? '1px solid green'
-                      : '1px solid gray',
+                      ? "1px solid green"
+                      : "1px solid gray",
                   }}
                   value={item.experience}
-                  onChange={handleChangeForExp(index, 'experience')}
+                  onChange={handleChangeForExp(index, "experience")}
                 ></TextArea>
               </AnotherWrapper>
               <AnotherWrapper>
-                <Line style={{ background: '#C1C1C1' }}></Line>
+                <Line style={{ background: "#C1C1C1" }}></Line>
               </AnotherWrapper>
               <Button onClick={handleAddInput}>
                 მეტი გამოცდილების დამატება
@@ -235,9 +189,9 @@ function Experience(props: any) {
             <Link to="/personal">
               <Toggle>უკან</Toggle>
             </Link>
-            <Link to="/education">
-              <Toggle onClick={submitForm}>შემდეგი</Toggle>
-            </Link>
+            {/* <Link to="/education"> */}
+            <Toggle onClick={submitForm}>შემდეგი</Toggle>
+            {/* </Link> */}
           </ButtonContainer>
         </Content>
       </Container>
