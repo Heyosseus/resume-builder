@@ -1,119 +1,104 @@
-import { useState } from 'react';
-import useLocalStorage from './hooks/useLocalStorage';
-import { CaretCircleLeft, X } from 'phosphor-react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-} from 'react-router-dom';
-import { GlobalStyles } from './styles/GlobalStyles';
-import Home from './components/Home';
-import PersonalInfo from './pages/PersonalInfo';
-import Experience from './pages/Experience';
-import Education from './pages/Education';
-import ResumeContent from './components/ResumeContent';
-import {
-  InputFields,
-  InputFieldsForEducation,
-} from './Interfaces/ForApp';
+import { useState } from "react";
+import useLocalStorage from "./hooks/useLocalStorage";
+import { CaretCircleLeft, X } from "phosphor-react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { GlobalStyles } from "./styles/GlobalStyles";
+import Home from "./components/Home";
+import PersonalInfo from "./pages/PersonalInfo";
+import Experience from "./pages/Experience";
+import Education from "./pages/Education";
+import ResumeContent from "./components/ResumeContent";
+import { InputFields, InputFieldsForEducation } from "./Interfaces/ForApp";
 import {
   Wrapper,
   Container,
   ResumeContainer,
   ResumeWrapper,
   SuccessCard,
-} from './styles/AppStyle';
-import {
-  validateEmail,
-  validateGeorgian,
-  validateGeorgianPhone,
-} from './utils/Validation';
+} from "./styles/AppStyle";
+import Output from "./components/Output";
 
 function App() {
   //for personal info
-  const [name, setName] = useLocalStorage('name', '');
-  const [surname, setSurname] = useLocalStorage('surname', '');
-  const [info, setInfo] = useLocalStorage('info', '');
-  const [email, setEmail] = useLocalStorage('email', '');
-  const [phone, setPhone] = useLocalStorage('phone', '');
-  const [image, setImage] = useLocalStorage('image', '');
+  const [name, setName] = useLocalStorage("name", "");
+  const [surname, setSurname] = useLocalStorage("surname", "");
+  const [info, setInfo] = useLocalStorage("info", "");
+  const [email, setEmail] = useLocalStorage("email", "");
+  const [phone, setPhone] = useLocalStorage("phone", "");
+  const [image, setImage] = useLocalStorage("image", "");
   const [imageData, setImageData] = useState<string | null>(null);
-  const [showImage, setShowImage] = useLocalStorage('display', false);
+  const [showImage, setShowImage] = useState(false);
   //for experience
-  const [position, setPosition] = useLocalStorage('position', '');
-  const [employer, setEmployer] = useLocalStorage('employer', '');
-  const [startDate, setStartDate] = useLocalStorage('start', '');
-  const [endDate, setEndDate] = useLocalStorage('end', '');
-  const [experience, setExperience] = useLocalStorage(
-    'experience',
-    ''
-  );
+  const [position, setPosition] = useLocalStorage("position", "");
+  const [employer, setEmployer] = useLocalStorage("employer", "");
+  const [startDate, setStartDate] = useLocalStorage("start", "");
+  const [endDate, setEndDate] = useLocalStorage("end", "");
+  const [experience, setExperience] = useLocalStorage("experience", "");
   //for education
-  const [school, setSchool] = useLocalStorage('school', '');
-  const [degree, setDegree] = useLocalStorage('degree', '');
-  const [endOfStudy, setEndOfStudy] = useLocalStorage(
-    'endOfStudy',
-    ''
-  );
-  const [bio, setBio] = useLocalStorage('bio', '');
-  const [display, setDisplay] = useState(true);
+  const [school, setSchool] = useLocalStorage("school", "");
+  const [degree, setDegree] = useLocalStorage("degree", "");
+  const [endOfStudy, setEndOfStudy] = useLocalStorage("endOfStudy", "");
+  const [bio, setBio] = useLocalStorage("bio", "");
 
   //for post request
-  const [message, setMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>("");
   const [error, setError] = useState();
-  const handleDisplay = () => {
-    setDisplay(!display);
-  };
-
-  const [count, setCount] = useState(3);
-
-  // for duplicate input fields content when user clicks on button
+  const [stringImage, setStringImage] = useLocalStorage('stringImage',
+    null
+  );
+  const [container, setContainer] = useLocalStorage("response", "");
+  const [imageUrl, setImageUrl] = useState<string>("");
+  // for duplicate input fields content when the user clicks on the button
 
   const [experienceContent, setExperienceContent] = useLocalStorage(
-    'experiences',
+    "experiences",
     [
       {
-        position: '',
-        employer: '',
-        startDate: '',
-        endDate: '',
-        experience: '',
+        position: "",
+        employer: "",
+        startDate: "",
+        endDate: "",
+        experience: "",
       },
     ]
   );
+
+  const clearStorage = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
   const handleAddInput = () => {
     setExperienceContent([
       ...experienceContent,
       {
-        position: '',
-        employer: '',
-        startDate: '',
-        endDate: '',
-        experience: '',
+        position: "",
+        employer: "",
+        startDate: "",
+        endDate: "",
+        experience: "",
       },
     ]);
-    setCount(count + 1);
   };
 
-  const handleChangeForExp =
-    (index: number, name: keyof InputFields) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const updatedContent = [...experienceContent];
-      updatedContent[index][name] = e.target.value;
-      setExperienceContent(updatedContent);
-    };
+ 
+  const handleChangeForExp = (index: number, name: keyof InputFields) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedContent = [...experienceContent];
+    updatedContent[index][name] = e.target.value;
+    setExperienceContent(updatedContent);
+  };
 
   // for education content duplicate input fields
   const [educationContent, setEducationContent] = useLocalStorage(
-    'educations',
+    "educations",
     [
       {
-        school: '',
-        degree: '',
-        endOfStudy: '',
-        bio: '',
+        school: "",
+        degree: "",
+        endOfStudy: "",
+        bio: "",
       },
     ]
   );
@@ -122,21 +107,22 @@ function App() {
     setEducationContent([
       ...educationContent,
       {
-        school: '',
-        degree: '',
-        endOfStudy: '',
-        bio: '',
+        school: "",
+        degree: "",
+        endOfStudy: "",
+        bio: "",
       },
     ]);
   };
 
-  const handleChangeForEdu =
-    (index: number, name: keyof InputFieldsForEducation) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const updatedContentEdu = [...educationContent];
-      updatedContentEdu[index][name] = e.target.value;
-      setEducationContent(updatedContentEdu);
-    };
+  const handleChangeForEdu = (
+    index: number,
+    name: keyof InputFieldsForEducation
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedContentEdu = [...educationContent];
+    updatedContentEdu[index][name] = e.target.value;
+    setEducationContent(updatedContentEdu);
+  };
 
   // for passing props to children components
   const childProps = {
@@ -178,16 +164,19 @@ function App() {
     setBio,
     message,
     setMessage,
-    validateEmail,
-    validateGeorgian,
-    validateGeorgianPhone,
     error,
     setError,
     imageData,
     setImageData,
     handleChangeForExp,
     handleAddInputForEducation,
-    count,
+    setContainer,
+    container,
+    imageUrl,
+    setImageUrl,
+    stringImage,
+    setStringImage,
+    clearStorage,
   };
 
   return (
@@ -217,40 +206,7 @@ function App() {
               <ResumeContent {...childProps} />,
             ]}
           />
-          <Route
-            path="/finish"
-            element={[
-              <ResumeWrapper>
-                <Container>
-                  <Link to="/">
-                    <CaretCircleLeft
-                      size={38}
-                      style={{ color: 'black' }}
-                    />
-                  </Link>
-                </Container>
-                <ResumeContainer>
-                  <ResumeContent {...childProps} />
-                </ResumeContainer>
-                {message && display && (
-                  <SuccessCard>
-                    {message}
-                    <X
-                      size={22}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        marginTop: '6px',
-                        marginRight: '3px',
-                      }}
-                      onClick={handleDisplay}
-                    />
-                  </SuccessCard>
-                )}
-              </ResumeWrapper>,
-            ]}
-          />
+          <Route path="/output" element={<Output {...childProps} />} />
         </Routes>
       </Router>
     </Wrapper>
