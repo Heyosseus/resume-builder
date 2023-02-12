@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import {
-  CaretCircleLeft,
-  CheckCircle,
-  Warning,
-} from 'phosphor-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { OptionType } from '../Interfaces/ForEdu';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { CaretCircleLeft, CheckCircle, Warning } from "phosphor-react";
+import { Link, useNavigate } from "react-router-dom";
+import { OptionType } from "../Interfaces/ForEdu";
+import { Buffer } from "buffer";
+import check from "../assets/correct.png";
 import {
   Container,
   Content,
@@ -23,76 +21,31 @@ import {
   Toggle,
   Error,
   FormInput,
-} from '../styles/ForPages';
-import { validateGeorgian } from '../utils/Validation';
+  Check,
+} from "../styles/ForPages";
+import { validateGeorgian } from "../utils/Validation";
+import axios from "axios";
 
 function Education(props: any) {
   const {
-    position,
-    employer,
-    handleChange,
-    setStartDate,
-    setEndDate,
-    setExperience,
-    handleAddInput,
-    setName,
-    setSurname,
-    setEmail,
-    setPhone,
-    setInfo,
-    setImage,
-    setPosition,
-    setEmployer,
-    school,
-    setSchool,
-    degree,
-    setDegree,
-    endOfStudy,
-    setEndOfStudy,
-    bio,
-    setBio,
-    display,
-    setDisplay,
-    message,
     setMessage,
-    image,
     name,
     surname,
     email,
     phone,
     info,
-    experience,
-    startDate,
-    endDate,
     educationContent,
     handleAddInputForEducation,
     handleChangeForEdu,
     experienceContent,
+    setContainer,
+    setImageUrl,
+    setStringImage,
+    clearStorage,
   } = props;
 
-  const navigate = useNavigate();
-  const clearStorageForEdu = () => {
-    localStorage.clear();
-    setStartDate('');
-    setEndDate('');
-    setPosition('');
-    setName('');
-    setSurname('');
-    setEmail('');
-    setPhone('');
-    setInfo('');
-    setEmployer('');
-    setExperience('');
-    setSchool('');
-    setDegree('');
-    setEndOfStudy('');
-    setBio('');
-    setMessage('');
-    navigate('/');
-  };
-
-  const endpoint = 'https://resume.redberryinternship.ge/api/degrees';
-  const url = 'https://resume.redberryinternship.ge/api/cvs';
+  const endpoint = "https://resume.redberryinternship.ge/api/degrees";
+  const url = "https://resume.redberryinternship.ge/api/cvs";
 
   const [options, setOptions] = useState<OptionType[]>([]);
 
@@ -100,9 +53,9 @@ function Education(props: any) {
     const fetchData = async () => {
       try {
         const response = await fetch(endpoint, {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         });
 
@@ -117,75 +70,103 @@ function Education(props: any) {
   }, []);
 
   const id = 1;
-  // const id = options.map((option) => option.id);
-  const [degreeId, setDegreeId] = useState(id);
 
-  const storedImage = JSON.parse(localStorage.getItem('image')!);
-  const imageFile = new File([storedImage], 'profile photo', {
-    type: 'image/png',
+  // Get the image data from local storage
+  const storedData = localStorage.getItem("image");
+  if (!storedData) {
+    console.error("No image data found in local storage.");
+    return null;
+  }
+
+  // Decode the Base64-encoded image data
+  const base64Image = storedData;
+  const type = base64Image.split(";")[0].split(":")[1];
+  const binaryData = new Uint8Array(
+    Buffer.from(base64Image.split(",")[1], "base64")
+  );
+
+  // Create a Blob and File object from the binary data to file type
+  const imageBlob = new Blob([binaryData], { type });
+  const imageFile = new File([imageBlob], "profile photo", {
+    type: "image/png",
   });
 
-  const data = {
+  const reader = new FileReader();
+  reader.readAsDataURL(imageFile);
+  reader.onload = () => {
+    const base64 = reader.result;
+    setStringImage(base64);
+  };
+
+ 
+// costumize experience and education objects
+  const experienceData = experienceContent.map((exp: any, index: number) => ({
+    key: `exp_${index}`,
+    position: exp.position,
+    employer: exp.employer,
+    start_date: exp.startDate,
+    due_date: exp.endDate,
+    description: exp.experience,
+  }));
+
+  const educationData = educationContent.map((edu: any, index: number) => ({
+    key: `edu_${index}`,
+    institute: edu.school,
+    degree_id: id,
+    due_date: edu.endOfStudy,
+    description: edu.bio,
+  }));
+
+  const formData = {
     name: name,
     surname: surname,
     email: email,
-    phone_number: phone.replace(/\s+/g, ''),
-    experiences: [
-      {
-        position: experienceContent[0].position,
-        employer: experienceContent[0].employer,
-        start_date: experienceContent[0].startDate,
-        due_date: experienceContent[0].endDate,
-        description: experienceContent[0].experience,
-      },
-    ],
-    educations: [
-      {
-        institute: educationContent[0].school,
-        degree_id: id,
-        due_date: educationContent[0].endOfStudy,
-        description: educationContent[0].bio,
-      },
-    ],
+    phone_number: phone.replace(/\s+/g, ""),
+    experiences: experienceData,
+    educations: educationData,
     image: imageFile,
     about_me: info,
   };
 
-  const handleSubmit = async () => {
-    let formData = new FormData();
-    formData.append('data', JSON.stringify(data));
-
-    const response = await fetch(
-      'https://resume.redberryinternship.ge/api/cvs',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: formData,
-      }
-    );
-    console.log(data);
-    console.log(imageFile)
-
-    if (response.status === 201) {
-      setMessage('რეზიუმე წარმატებით გაიგზავნა  🎉');
-      console.log('რეზიუმე წარმატებით გაიგზავნა', response);
+  const navigate = useNavigate()
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  
+  const handleSubmit = () => {
+    setIsButtonClicked(true);
+    if (!isButtonClicked) {
+      return false;
     } else {
-      setMessage('რეზიუმე ვერ გაიგზავნა :(');
-      console.error(response);
+      axios
+        .post(url, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 201) {
+            setContainer(response.data);
+            console.log(response.data)
+            const objectUrl = URL.createObjectURL(imageFile);
+            setImageUrl(objectUrl);
+            setMessage("რეზიუმე წარმატებით გაიგზავნა 🎉");
+          } else {
+            console.log("რეზიუმე ვერ გაიგზავნა :(");
+            setMessage("რეზიუმე ვერ გაიგზავნა :(");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      navigate('/output')
     }
   };
-
   return (
     <div>
       <Container>
-        <Link to="/" style={{ height: '38px' }}>
+        <Link to="/" style={{ height: "38px" }}>
           <CaretCircleLeft
             size={38}
-            style={{ color: 'black' }}
-            onClick={clearStorageForEdu}
+            style={{ color: "black" }}
+            onClick={clearStorage}
           />
         </Link>
         <Content>
@@ -207,27 +188,23 @@ function Education(props: any) {
                       name="school"
                       value={item.school}
                       style={{
-                        width: '100%',
+                        width: "100%",
                         border:
-                          validateGeorgian(item.school) === false &&
-                          item.school
-                            ? '1px solid red'
-                            : validateGeorgian(item.school) ===
-                                true && item.school
-                            ? '1px solid green'
-                            : '1px solid gray',
+                          item.school.length === 0 && isButtonClicked
+                            ? "1px solid red"
+                            : item.school
+                            ? "1px solid green"
+                            : "1px solid gray",
                       }}
-                      onChange={handleChangeForEdu(index, 'school')}
+                      onChange={handleChangeForEdu(index, "school")}
                     ></Input>
                     <Error>
-                      {validateGeorgian(item.school) === false &&
-                        item.school && (
-                          <Warning size={16} color="red" />
-                        )}
-                      {validateGeorgian(item.school) === true &&
-                        item.school && (
-                          <CheckCircle size={22} color="green" />
-                        )}
+                      {item.school.length === 0 &&
+                        isButtonClicked &&
+                        item.school && <Warning size={16} color="red" />}
+                      {item.school.length >= 2 && item.school && (
+                        <Check src={check} />
+                      )}
                     </Error>
                   </FormInput>
                   <WarningMessage>მინიმუმ 2 სიმბოლო</WarningMessage>
@@ -238,12 +215,15 @@ function Education(props: any) {
                   <Label>ხარისხი</Label>
                   <Select
                     style={{
-                      border: item.degree
-                        ? '1px solid green'
-                        : '1px solid gray',
+                      border:
+                        item.degree.length === 0 && isButtonClicked
+                          ? "1px solid red"
+                          : item.degree
+                          ? "1px solid green"
+                          : "1px solid gray",
                     }}
                     value={item.degree}
-                    onChange={handleChangeForEdu(index, 'degree')}
+                    onChange={handleChangeForEdu(index, "degree")}
                   >
                     {options.map((option) => (
                       <Option key={option.id} value={option.title}>
@@ -259,11 +239,14 @@ function Education(props: any) {
                     name="endOfStudy"
                     value={item.endOfStudy}
                     style={{
-                      border: item.endOfStudy
-                        ? '1px solid green'
-                        : '1px solid gray',
+                      border:
+                        item.endOfStudy.length === 0 && isButtonClicked
+                          ? "1px solid red"
+                          : item.endOfStudy
+                          ? "1px solid green"
+                          : "1px solid gray",
                     }}
-                    onChange={handleChangeForEdu(index, 'endOfStudy')}
+                    onChange={handleChangeForEdu(index, "endOfStudy")}
                   ></Input>
                 </AnotherWrapper>
               </ForDates>
@@ -272,18 +255,21 @@ function Education(props: any) {
                 <TextArea
                   placeholder="განათლების აღწერა"
                   style={{
-                    height: '179px',
-                    border: item.bio
-                      ? '1px solid green'
-                      : '1px solid gray',
+                    height: "179px",
+                    border:
+                      item.bio.length === 0 && isButtonClicked
+                        ? "1px solid red"
+                        : item.endOfStudy
+                        ? "1px solid green"
+                        : "1px solid gray",
                   }}
                   value={item.bio}
                   name="bio"
-                  onChange={handleChangeForEdu(index, 'bio')}
+                  onChange={handleChangeForEdu(index, "bio")}
                 ></TextArea>
               </AnotherWrapper>
               <AnotherWrapper>
-                <Line style={{ background: '#C1C1C1' }}></Line>
+                <Line style={{ background: "#C1C1C1" }}></Line>
               </AnotherWrapper>
               <Button onClick={handleAddInputForEducation}>
                 მეტი სასწავლებლის დამატება
@@ -294,10 +280,8 @@ function Education(props: any) {
           <ButtonContainer>
             <Link to="/experience">
               <Toggle>უკან</Toggle>
-            </Link>
-            <Link to="/finish">
-              <Toggle onClick={handleSubmit}>დასრულება</Toggle>
-            </Link>
+            </Link>         
+            <Toggle onClick={handleSubmit}>დასრულება</Toggle>    
           </ButtonContainer>
         </Content>
       </Container>
