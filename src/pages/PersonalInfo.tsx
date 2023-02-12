@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import MaskedInput from 'react-text-mask';
-
+import check from '../assets/correct.png'
 import {
   CaretCircleLeft,
   Warning,
   CheckCircle,
+
 } from 'phosphor-react';
 
 import {
@@ -34,6 +35,7 @@ import {
   WrapperForPhoto,
   Error,
   FormInput,
+  Check
 } from '../styles/ForPages';
 
 function PersonalInfo(props: any) {
@@ -51,18 +53,13 @@ function PersonalInfo(props: any) {
     image,
     setImage,
     setShowImage,
+    showImage,
+    clearStorage,
   } = props;
 
 
   const navigate = useNavigate();
-  const clearStorage = () => {
-    setName('');
-    setSurname('');
-    setEmail('');
-    setInfo('');
-    setPhone('');
-    setImage('');
-  };
+
 
   //For image upload
   const hiddenFileInput = useRef<HTMLInputElement>(null as any);
@@ -72,12 +69,6 @@ function PersonalInfo(props: any) {
     setImage(event.target.files![0]);
     const blob = new Blob([image!], { type: image!.type });
     localStorage.setItem('image', JSON.stringify(blob));
-    // const reader = new FileReader();
-    // const blob = new Blob([image!], { type: image!.type });
-    // reader.readAsDataURL(blob);
-    // reader.onload = () => {
-    //   setImageData(reader.result as string);
-    // };
   };
 
   const handleButtonClick = () => {
@@ -88,13 +79,15 @@ function PersonalInfo(props: any) {
   const formData = new FormData();
   formData.append('image', image);
 
+  const [isError, setIsError] = useState(true);
   // for button that navigates to next page
   const submitForm = () => {
     if (
       validateGeorgian(name) === false ||
       validateGeorgian(surname) === false ||
       validateEmail(email) === false ||
-      validateGeorgianPhone(phone) === false
+      validateGeorgianPhone(phone) === false ||
+      showImage === false
     ) {
       return false;
     } else {
@@ -105,10 +98,10 @@ function PersonalInfo(props: any) {
 
   return (
     <Container>
-      <Link to="/" style={{ height: '38px' }}>
+      <Link to="/" style={{ height: "38px" }}>
         <CaretCircleLeft
           size={38}
-          style={{ color: 'black' }}
+          style={{ color: "black" }}
           onClick={clearStorage}
         />
       </Link>
@@ -131,15 +124,12 @@ function PersonalInfo(props: any) {
                 style={{
                   border:
                     validateGeorgian(name) === false && name
-                      ? '1px solid red'
+                      ? "1px solid red"
                       : validateGeorgian(name) === true && name
-                      ? '1px solid green'
-                      : '1px solid gray',
+                      ? "1px solid green"
+                      : "1px solid gray",
                 }}
-
-                onChange={(
-                  event: React.ChangeEvent<HTMLInputElement>
-                ) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setName(event.target.value);
                 }}
               ></Input>
@@ -148,13 +138,11 @@ function PersonalInfo(props: any) {
                   <Warning size={16} color="red" />
                 )}
                 {validateGeorgian(name) === true && name && (
-                  <CheckCircle size={22} color="green" />
+                  <Check src={check} />
                 )}
               </Error>
             </FormInput>
-            <WarningMessage>
-              მინიმუმ 2 ასო, ქართული ასოები
-            </WarningMessage>
+            <WarningMessage>მინიმუმ 2 ასო, ქართული ასოები</WarningMessage>
           </FormContainer>
           <FormContainer>
             <Label>გვარი</Label>
@@ -167,14 +155,12 @@ function PersonalInfo(props: any) {
                 style={{
                   border:
                     validateGeorgian(surname) === false && surname
-                      ? '1px solid red'
+                      ? "1px solid red"
                       : validateGeorgian(surname) === true && surname
-                      ? '1px solid green'
-                      : '1px solid gray',
+                      ? "1px solid green"
+                      : "1px solid gray",
                 }}
-                onChange={(
-                  event: React.ChangeEvent<HTMLInputElement>
-                ) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                   setSurname(event.target.value);
                 }}
               ></Input>
@@ -183,27 +169,28 @@ function PersonalInfo(props: any) {
                   <Warning size={16} color="red" />
                 )}
                 {validateGeorgian(surname) === true && surname && (
-                  <CheckCircle size={22} color="green" />
+                  <Check src={check} />
                 )}
               </Error>
             </FormInput>
-            <WarningMessage>
-              მინიმუმ 2 ასო, ქართული ასოები
-            </WarningMessage>
+            <WarningMessage>მინიმუმ 2 ასო, ქართული ასოები</WarningMessage>
           </FormContainer>
         </ForInputs>
         <WrapperForPhoto>
-          <Label style={{ fontSize: '18px' }}>
+          <Label
+            style={{
+              fontSize: "18px",
+              color: image ? "black" : !image ? "" : "red",
+            }}
+          >
             პირადი ფოტოს ატვირთვა
           </Label>
-          <UploadPhoto onClick={handleButtonClick}>
-            ატვირთვა
-          </UploadPhoto>
+          <UploadPhoto onClick={handleButtonClick}>ატვირთვა</UploadPhoto>
           <InputForPhotoUpload
             type="file"
             ref={hiddenFileInput}
             onChange={handleImageUpload}
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
         </WrapperForPhoto>
         <AnotherWrapper>
@@ -212,9 +199,10 @@ function PersonalInfo(props: any) {
             placeholder="ზოგადი ინფო შენ შესახებ"
             name="info"
             value={info}
-            onChange={(
-              event: React.ChangeEvent<HTMLTextAreaElement>
-            ) => {
+            style={{
+              border: info ? "1px solid green" : "1px solid gray",
+            }}
+            onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
               setInfo(event.target.value);
             }}
           ></TextArea>
@@ -227,17 +215,15 @@ function PersonalInfo(props: any) {
               placeholder="anzor666@redberry.ge"
               value={email}
               style={{
-                width: '100%',
+                width: "100%",
                 border:
                   validateEmail(email) === false && email
-                    ? '1px solid red'
+                    ? "1px solid red"
                     : validateEmail(email) === true && email
-                    ? '1px solid green'
-                    : '1px solid gray',
+                    ? "1px solid green"
+                    : "1px solid gray",
               }}
-              onChange={(
-                event: React.ChangeEvent<HTMLInputElement>
-              ) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setEmail(event.target.value);
               }}
             ></Input>
@@ -245,14 +231,10 @@ function PersonalInfo(props: any) {
               {validateEmail(email) === false && email && (
                 <Warning size={16} color="red" />
               )}
-              {validateEmail(email) === true && email && (
-                <CheckCircle size={22} color="green" />
-              )}
+              {validateEmail(email) === true && email && <Check src={check} />}
             </Error>
           </FormInput>
-          <WarningMessage>
-            უნდა მთავრდებოდეს @redberry.ge-ით
-          </WarningMessage>
+          <WarningMessage>უნდა მთავრდებოდეს @redberry.ge-ით</WarningMessage>
         </AnotherWrapper>
         <AnotherWrapper>
           <Label>მობილურის ნომერი</Label>
@@ -265,34 +247,32 @@ function PersonalInfo(props: any) {
                 /\d/,
                 /\d/,
                 /\d/,
-                ' ',
+                " ",
                 /\d/,
                 /\d/,
                 /\d/,
-                ' ',
+                " ",
                 /\d/,
                 /\d/,
-                ' ',
+                " ",
                 /\d/,
                 /\d/,
-                ' ',
+                " ",
                 /\d/,
                 /\d/,
               ]}
               guide={false}
               value={phone}
               style={{
-                width: '100%',
+                width: "100%",
                 border:
                   validateGeorgianPhone(phone) === false && phone
-                    ? '1px solid red'
+                    ? "1px solid red"
                     : validateGeorgianPhone(phone) === true && phone
-                    ? '1px solid green'
-                    : '1px solid gray',
+                    ? "1px solid green"
+                    : "1px solid gray",
               }}
-              onChange={(
-                event: React.ChangeEvent<HTMLInputElement>
-              ) => {
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setPhone(event.target.value);
               }}
             ></StyledMaskedInput>
@@ -301,7 +281,7 @@ function PersonalInfo(props: any) {
                 <Warning size={16} color="red" />
               )}
               {validateGeorgianPhone(phone) === true && phone && (
-                <CheckCircle size={22} color="green" />
+                <Check src={check} />
               )}
             </Error>
           </FormInput>
@@ -344,3 +324,4 @@ const StyledMaskedInput = styled(MaskedInput)`
     opacity: 60%;
   }
 `;
+
