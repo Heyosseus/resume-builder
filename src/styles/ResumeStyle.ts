@@ -78,7 +78,7 @@ export const Line = styled.div`
   height: 1px;
   background: #c8c8c8;
   width: 662px;
-  margin-top: 18px;
+  margin-top: 12px;
 `;
 
 export const HeaderForExperience = styled(About)`

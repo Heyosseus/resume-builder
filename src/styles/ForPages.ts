@@ -159,3 +159,8 @@ export const Error = styled.div`
   margin-right: 12px;
   position: absolute;
 `;
+
+export const Check = styled.img`
+  width: 18px;
+  height: 18px;
+`
