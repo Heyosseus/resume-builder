@@ -9,7 +9,7 @@
     return true;
   };
   export const validateEmail = (value: string) => {
-    const emailRegex = /^\w+([.-]?\w+)*@redberry.ge$/;
+    const emailRegex = /^[\wა-ჰ]+([.-][\wა-ჰ]+)*@redberry.ge$/;
     if (!emailRegex.test(value)) return false;
     return true;
   };
