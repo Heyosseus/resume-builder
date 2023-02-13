@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { CaretCircleLeft, CheckCircle, Warning } from "phosphor-react";
+import { CaretCircleLeft, Warning } from "phosphor-react";
 import { Link, useNavigate } from "react-router-dom";
 import check from "../assets/correct.png";
 import {
@@ -47,10 +47,10 @@ function Experience(props: any) {
   return (
     <ForFlex>
       <Container>
-        <Link to="/" style={{ height: "38px" }}>
+        <Link to="/" style={{ height: '38px' }}>
           <CaretCircleLeft
             size={38}
-            style={{ color: "black" }}
+            style={{ color: 'black' }}
             onClick={clearStorage}
           />
         </Link>
@@ -74,20 +74,22 @@ function Experience(props: any) {
                       name="position"
                       value={item.position}
                       style={{
-                        width: "100%",
+                        width: '100%',
                         border:
-                          item.position.length === 0 && isButtonClicked
-                            ? "1px solid red"
+                          item.position.length === 0 &&
+                          isButtonClicked
+                            ? '1px solid red'
                             : item.position.length >= 2
-                            ? "1px solid green"
-                            : "1px solid gray",
+                            ? '1px solid green'
+                            : '1px solid gray',
                       }}
-                      onChange={handleChangeForExp(index, "position")}
+                      onChange={handleChangeForExp(index, 'position')}
                     ></Input>
                     <Error>
-                      {item.position.length === 0 && isButtonClicked && (
-                        <Warning size={16} color="red" />
-                      )}
+                      {item.position.length === 0 &&
+                        isButtonClicked && (
+                          <Warning size={16} color="red" />
+                        )}
                       {item.position.length >= 2 && item.position && (
                         <Check src={check} />
                       )}
@@ -103,27 +105,31 @@ function Experience(props: any) {
                       placeholder="დამსაქმებელი"
                       value={item.employer}
                       style={{
-                        width: "100%",
+                        width: '100%',
                         border:
-                          item.employer.length === 0 && isButtonClicked
-                            ? "1px solid red"
+                          item.employer.length === 0 &&
+                          isButtonClicked
+                            ? '1px solid red'
                             : item.employer
-                            ? "1px solid green"
-                            : "1px solid gray",
+                            ? '1px solid green'
+                            : '1px solid gray',
                       }}
                       // onBlur={() => setStyle({  isFocused: false })}
-                      onChange={handleChangeForExp(index, "employer")}
+                      onChange={handleChangeForExp(index, 'employer')}
                     ></Input>
                     <Error>
-                      {item.employer.length === 0 && isButtonClicked && (
-                        <Warning size={16} color="red" />
-                      )}
+                      {item.employer.length === 0 &&
+                        isButtonClicked && (
+                          <Warning size={16} color="red" />
+                        )}
                       {item.employer.length >= 2 && item.employer && (
                         <Check src={check} />
                       )}
                     </Error>
                   </FormInput>
-                  <WarningMessage>მინიმუმ 2 ასო სიმბოლო</WarningMessage>
+                  <WarningMessage>
+                    მინიმუმ 2 ასო სიმბოლო
+                  </WarningMessage>
                 </FormContainer>
               </ContainerForInputs>
               <ForDates>
@@ -135,13 +141,13 @@ function Experience(props: any) {
                     style={{
                       border:
                         item.startDate.length === 0 && isButtonClicked
-                          ? "1px solid red"
+                          ? '1px solid red'
                           : item.startDate.length >= 2
-                          ? "1px solid green"
-                          : "1px solid gray",
+                          ? '1px solid green'
+                          : '1px solid gray',
                     }}
                     value={item.startDate}
-                    onChange={handleChangeForExp(index, "startDate")}
+                    onChange={handleChangeForExp(index, 'startDate')}
                   ></Input>
                 </AnotherWrapper>
                 <AnotherWrapper>
@@ -152,13 +158,13 @@ function Experience(props: any) {
                     style={{
                       border:
                         item.endDate.length === 0 && isButtonClicked
-                          ? "1px solid red"
+                          ? '1px solid red'
                           : item.endDate.length >= 2
-                          ? "1px solid green"
-                          : "1px solid gray",
+                          ? '1px solid green'
+                          : '1px solid gray',
                     }}
                     value={item.endDate}
-                    onChange={handleChangeForExp(index, "endDate")}
+                    onChange={handleChangeForExp(index, 'endDate')}
                   ></Input>
                 </AnotherWrapper>
               </ForDates>
@@ -169,15 +175,15 @@ function Experience(props: any) {
                   name="experience"
                   style={{
                     border: item.experience
-                      ? "1px solid green"
-                      : "1px solid gray",
+                      ? '1px solid green'
+                      : '1px solid gray',
                   }}
                   value={item.experience}
-                  onChange={handleChangeForExp(index, "experience")}
+                  onChange={handleChangeForExp(index, 'experience')}
                 ></TextArea>
               </AnotherWrapper>
               <AnotherWrapper>
-                <Line style={{ background: "#C1C1C1" }}></Line>
+                <Line style={{ background: '#C1C1C1' }}></Line>
               </AnotherWrapper>
               <Button onClick={handleAddInput}>
                 მეტი გამოცდილების დამატება
@@ -187,10 +193,10 @@ function Experience(props: any) {
 
           <ButtonContainer>
             <Link to="/personal">
-              <Toggle>უკან</Toggle>
+              <Toggle>ᲣᲙᲐᲜ</Toggle>
             </Link>
             {/* <Link to="/education"> */}
-            <Toggle onClick={submitForm}>შემდეგი</Toggle>
+            <Toggle onClick={submitForm}>ᲨᲔᲛᲓᲔᲒᲘ</Toggle>
             {/* </Link> */}
           </ButtonContainer>
         </Content>
