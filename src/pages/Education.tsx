@@ -23,7 +23,6 @@ import {
   FormInput,
   Check,
 } from "../styles/ForPages";
-import { validateGeorgian } from "../utils/Validation";
 import axios from "axios";
 
 function Education(props: any) {
@@ -39,8 +38,6 @@ function Education(props: any) {
     handleChangeForEdu,
     experienceContent,
     setContainer,
-    setImageUrl,
-    setStringImage,
     clearStorage,
   } = props;
 
@@ -91,12 +88,6 @@ function Education(props: any) {
     type: "image/png",
   });
 
-  const reader = new FileReader();
-  reader.readAsDataURL(imageFile);
-  reader.onload = () => {
-    const base64 = reader.result;
-    setStringImage(base64);
-  };
 
  
 // costumize experience and education objects
@@ -144,9 +135,7 @@ function Education(props: any) {
           console.log(response);
           if (response.status === 201) {
             setContainer(response.data);
-            console.log(response.data)
-            const objectUrl = URL.createObjectURL(imageFile);
-            setImageUrl(objectUrl);
+            console.log(response.data);
             setMessage("რეზიუმე წარმატებით გაიგზავნა 🎉");
           } else {
             console.log("რეზიუმე ვერ გაიგზავნა :(");
@@ -162,16 +151,16 @@ function Education(props: any) {
   return (
     <div>
       <Container>
-        <Link to="/" style={{ height: "38px" }}>
+        <Link to="/" style={{ height: '38px' }}>
           <CaretCircleLeft
             size={38}
-            style={{ color: "black" }}
+            style={{ color: 'black' }}
             onClick={clearStorage}
           />
         </Link>
         <Content>
           <Wrapper>
-            <Header>განათლება</Header>
+            <Header>ᲒᲐᲜᲐᲗᲚᲔᲑᲐ</Header>
             <PageCount>3/3</PageCount>
           </Wrapper>
           <Line></Line>
@@ -188,20 +177,22 @@ function Education(props: any) {
                       name="school"
                       value={item.school}
                       style={{
-                        width: "100%",
+                        width: '100%',
                         border:
                           item.school.length === 0 && isButtonClicked
-                            ? "1px solid red"
+                            ? '1px solid red'
                             : item.school
-                            ? "1px solid green"
-                            : "1px solid gray",
+                            ? '1px solid green'
+                            : '1px solid gray',
                       }}
-                      onChange={handleChangeForEdu(index, "school")}
+                      onChange={handleChangeForEdu(index, 'school')}
                     ></Input>
                     <Error>
                       {item.school.length === 0 &&
                         isButtonClicked &&
-                        item.school && <Warning size={16} color="red" />}
+                        item.school && (
+                          <Warning size={16} color="red" />
+                        )}
                       {item.school.length >= 2 && item.school && (
                         <Check src={check} />
                       )}
@@ -217,13 +208,13 @@ function Education(props: any) {
                     style={{
                       border:
                         item.degree.length === 0 && isButtonClicked
-                          ? "1px solid red"
+                          ? '1px solid red'
                           : item.degree
-                          ? "1px solid green"
-                          : "1px solid gray",
+                          ? '1px solid green'
+                          : '1px solid gray',
                     }}
                     value={item.degree}
-                    onChange={handleChangeForEdu(index, "degree")}
+                    onChange={handleChangeForEdu(index, 'degree')}
                   >
                     {options.map((option) => (
                       <Option key={option.id} value={option.title}>
@@ -240,13 +231,14 @@ function Education(props: any) {
                     value={item.endOfStudy}
                     style={{
                       border:
-                        item.endOfStudy.length === 0 && isButtonClicked
-                          ? "1px solid red"
+                        item.endOfStudy.length === 0 &&
+                        isButtonClicked
+                          ? '1px solid red'
                           : item.endOfStudy
-                          ? "1px solid green"
-                          : "1px solid gray",
+                          ? '1px solid green'
+                          : '1px solid gray',
                     }}
-                    onChange={handleChangeForEdu(index, "endOfStudy")}
+                    onChange={handleChangeForEdu(index, 'endOfStudy')}
                   ></Input>
                 </AnotherWrapper>
               </ForDates>
@@ -255,21 +247,21 @@ function Education(props: any) {
                 <TextArea
                   placeholder="განათლების აღწერა"
                   style={{
-                    height: "179px",
+                    height: '179px',
                     border:
                       item.bio.length === 0 && isButtonClicked
-                        ? "1px solid red"
+                        ? '1px solid red'
                         : item.endOfStudy
-                        ? "1px solid green"
-                        : "1px solid gray",
+                        ? '1px solid green'
+                        : '1px solid gray',
                   }}
                   value={item.bio}
                   name="bio"
-                  onChange={handleChangeForEdu(index, "bio")}
+                  onChange={handleChangeForEdu(index, 'bio')}
                 ></TextArea>
               </AnotherWrapper>
               <AnotherWrapper>
-                <Line style={{ background: "#C1C1C1" }}></Line>
+                <Line style={{ background: '#C1C1C1' }}></Line>
               </AnotherWrapper>
               <Button onClick={handleAddInputForEducation}>
                 მეტი სასწავლებლის დამატება
@@ -279,9 +271,9 @@ function Education(props: any) {
 
           <ButtonContainer>
             <Link to="/experience">
-              <Toggle>უკან</Toggle>
-            </Link>         
-            <Toggle onClick={handleSubmit}>დასრულება</Toggle>    
+              <Toggle>ᲣᲙᲐᲜ</Toggle>
+            </Link>
+            <Toggle onClick={handleSubmit}>ᲓᲐᲡᲠᲣᲚᲔᲑᲐ</Toggle>
           </ButtonContainer>
         </Content>
       </Container>
