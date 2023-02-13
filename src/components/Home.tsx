@@ -11,9 +11,9 @@ function Home() {
       <Logo src={logo} alt="redberry logo"></Logo>
       <Line></Line>
       <Content>
-        <Link to='/personal'>
-          <Button>ᲠᲔᲖᲘᲣᲛᲔᲡ ᲓᲐᲛᲐᲢᲔᲑᲐ</Button>
-        </Link>
+        <Button>
+          <Link to="/personal">ᲠᲔᲖᲘᲣᲛᲔᲡ ᲓᲐᲛᲐᲢᲔᲑᲐ</Link>{' '}
+        </Button>
         <SecondaryLogo src={secondaryLogo}></SecondaryLogo>
       </Content>
     </Container>
