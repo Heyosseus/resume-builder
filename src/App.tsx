@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useLocalStorage from "./hooks/useLocalStorage";
 import { CaretCircleLeft, X } from "phosphor-react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, HashRouter, Routes, Route, Link } from "react-router-dom";
 import { GlobalStyles } from "./styles/GlobalStyles";
 import Home from "./components/Home";
 import PersonalInfo from "./pages/PersonalInfo";
@@ -182,7 +182,7 @@ function App() {
   return (
     <Wrapper>
       <GlobalStyles />
-      <Router>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -206,9 +206,12 @@ function App() {
               <ResumeContent {...childProps} />,
             ]}
           />
-          <Route path="/output" element={<Output {...childProps} />} />
+          <Route
+            path="/output"
+            element={<Output {...childProps} />}
+          />
         </Routes>
-      </Router>
+      </HashRouter>
     </Wrapper>
   );
 }
