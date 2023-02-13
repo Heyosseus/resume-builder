@@ -67,7 +67,7 @@ const ResumeContent: React.FC<Props> = ({
             </Content>
           </Container>
           <ForImage>
-            {showImage && image && (
+            {image && (
               <ImageContainer src={image} alt="Preview" />
             )}
           </ForImage>
