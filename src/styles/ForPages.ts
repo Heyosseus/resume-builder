@@ -124,13 +124,14 @@ export const AnotherWrapper = styled.div`
 `;
 
 export const Toggle = styled.button`
-  width: 151px;
+  width: auto;
   height: 48px;
+  padding: 14px 22px;
   border-radius: 4px;
   border: none;
   background: #6b40e3;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 18px;
   font-weight: 500;
   letter-spacing: 0.8px;

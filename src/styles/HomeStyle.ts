@@ -36,6 +36,6 @@ export const Button = styled.button`
 export const SecondaryLogo = styled.img`
   z-index: 0;
   position: absolute;
-  top: 513px;
-  left: 1196px;
+  top: 403px;
+  left: 1006px;
 `;
