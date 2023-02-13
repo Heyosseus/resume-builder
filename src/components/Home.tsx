@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import logo from '../assets/logo.png';
+import logo from '../assets/LOGO.png';
 import secondaryLogo from '../assets/logo-bg.png';
 import background from '../assets/background.png';
 import { Content, Logo, Line, Button, SecondaryLogo } from '../styles/HomeStyle';
