@@ -43,13 +43,16 @@ function App() {
   //for post request
   const [message, setMessage] = useState<string>("");
   const [error, setError] = useState();
-  const [stringImage, setStringImage] = useLocalStorage('stringImage',
-    null
-  );
   const [container, setContainer] = useLocalStorage("response", "");
   const [imageUrl, setImageUrl] = useState<string>("");
-  // for duplicate input fields content when the user clicks on the button
 
+  // clear local storage and redirect to home page
+  const clearStorage = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
+
+  // for experience content, duplicate input fields
   const [experienceContent, setExperienceContent] = useLocalStorage(
     "experiences",
     [
@@ -63,10 +66,6 @@ function App() {
     ]
   );
 
-  const clearStorage = () => {
-    localStorage.clear();
-    window.location.href = "/";
-  };
 
   const handleAddInput = () => {
     setExperienceContent([
@@ -90,7 +89,7 @@ function App() {
     setExperienceContent(updatedContent);
   };
 
-  // for education content duplicate input fields
+  // for education content, duplicate input fields
   const [educationContent, setEducationContent] = useLocalStorage(
     "educations",
     [
@@ -174,8 +173,6 @@ function App() {
     container,
     imageUrl,
     setImageUrl,
-    stringImage,
-    setStringImage,
     clearStorage,
   };
 
