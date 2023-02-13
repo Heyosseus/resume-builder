@@ -5,12 +5,10 @@ import styled from "styled-components";
 import { Container, ForFlex, FormContainer, Label } from "../styles/ForPages";
 import cv from "../assets/LOGO-cv.png";
 import {
-  Wrapper,
   About,
   AboutExperience,
   Bio,
   Content,
-  ContentContainer,
   Dates,
   Email,
   ForImage,
@@ -25,16 +23,14 @@ import {
 import { SuccessCard } from "../styles/AppStyle";
 
 function Output(props: any) {
-  const { container, imageUrl, message, stringImage , clearStorage} = props;
+  const { container, message, clearStorage} = props;
 
   const [display, setDisplay] = useState(true);
   const handleDisplay = () => {
     setDisplay(!display);
   };
   console.log(container);
-  console.log(imageUrl);
 
-  
   return (
     <ParentContainer>
       <div>
@@ -68,7 +64,7 @@ function Output(props: any) {
             </Content>
           </Resume>
           <ForImage>
-            <ImageContainer src={stringImage} alt="Profile" />
+            <ImageContainer src={`https://resume.redberryinternship.ge${container.image}`} alt="Profile" />
           </ForImage>
         </ForFlex>
         <div>
